@@ -48,3 +48,26 @@
     text-align: center;
 }
 
+#match-location {
+    margin-top: 1%;
+}
+
+.em-wave {
+    font-size: 1.2em;
+}
+
+.em-musical_note {
+    font-size: 1.2em;
+}
+
+.match-footer {
+    background-color: #343a40 !important;
+    text-align: center;
+    color: rgba(255,255,255,.5) !important;
+    margin-top: 3%;
+}
+
+.card-content {
+    background-color: #ffffff;
+background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
+}

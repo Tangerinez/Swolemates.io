@@ -44,9 +44,75 @@
 
     <div class="containerStart">
         <h1 class="display-4">Welcome to Swolemates</h1>
-        <button type="button" class="btn btn-primary btn-lg btn-block">LOGIN </button>
-        <button type="button" class="btn btn-secondary btn-lg btn-block">SIGN UP</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#exampleModalCenter">LOGIN </button>
+        <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Login</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group row">
+                              <div class="col-sm-12">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                                </div>
+                            </div>
+                        </form>    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Sign In</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        <button type="button" class="btn btn-secondary btn-lg btn-block"data-toggle="modal" data-target="#modal2">SIGN UP</button>
+            <!-- Modal -->
+            <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Create Account</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Email</label>
+                                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="johndoe@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword5">Password</label>
+                                <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
+                                <small id="passwordHelpBlock" class="form-text text-muted">
+  Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                                </small>
+                            </div>  
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Confirm Password</label>
+                                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="">
+                            </div>
+                        </form>    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Get Started</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
     </div>
+
   
     
     <div class="card-footer text-muted">Copyright 2019 © </div>

@@ -8,6 +8,17 @@
     background-color: rgb(192, 190, 190);
 }
 
+#matchpage-body {
+    background-color: rgb(192, 190, 190);
+}
+
+.card {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+    margin-top: 3%;
+}
+
 .card-footer {
     text-align: center;
 }
@@ -20,4 +31,19 @@
 .containerLogin {
     padding: 200px;
     background-color: rgb(192, 190, 190);
+}
+
+#matches-info {
+    font-size: 15px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#swolemate-matches {
+    margin-top: 2%;
+    text-align: center;
 }

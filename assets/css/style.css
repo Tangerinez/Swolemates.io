@@ -1,0 +1,23 @@
+
+.display-4 {
+    text-align: center;
+}
+
+.containerStart {
+    padding: 300px;
+    background-color: rgb(192, 190, 190);
+}
+
+.card-footer {
+    text-align: center;
+}
+
+#login {
+    text-align: center;
+    padding: 20px;
+}
+
+.containerLogin {
+    padding: 200px;
+    background-color: rgb(192, 190, 190);
+}

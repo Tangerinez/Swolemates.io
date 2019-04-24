@@ -9,7 +9,7 @@
 }
 
 #matchpage-body {
-    background-color: rgb(192, 190, 190);
+    background-size: cover;
 }
 
 .card {
@@ -47,3 +47,4 @@
     margin-top: 2%;
     text-align: center;
 }
+

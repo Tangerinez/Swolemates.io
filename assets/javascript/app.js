@@ -1,5 +1,5 @@
 // Initialize Firebase
-var config = {
+  var config = {
     apiKey: "AIzaSyCafmplLd0Do2Eaoia_Uer52D6hg40j0RE",
     authDomain: "swolemates-22427.firebaseapp.com",
     databaseURL: "https://swolemates-22427.firebaseio.com",
@@ -7,27 +7,50 @@ var config = {
     storageBucket: "swolemates-22427.appspot.com",
     messagingSenderId: "522806249949"
   };
+
   firebase.initializeApp(config);
+  var db = firebase.firestore();
 
-
-  // Get a reference to the database service
-  var database = firebase.database();
-
-  
-  
-  
-  
   ///////////// GLOBAL VARIABLES ///////////////
   
-  // Global variable for capturing user's input for their email
-  var email = $("#input-email").val().trim();
+
   
-  // Global variable for capturing user's input for their password
-  var password = $("#input-password").val().trim();
+
+
+
+  // ON-CLICK function for transferring user's email and password into FireStore
+  $(".get-started-button").on("click", function(event) {
   
+  event.preventDefault();
   
-  
-  
+  var email = $("#input-email").val(); 
+  var password = $("#input-password").val(); 
+  var confirmPassword = $("#input-confirmPassword").val();
+
+  if (password === confirmPassword) {
+    db.collection("userLoginInfo").doc().set({
+      email: email,
+      password: password,
+    })
+    .then(function() {
+      console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+      console.error("Error writing document: ", error);
+    });
+  } else {
+    var wrongPasswordContainer = $("<small>");
+    wrongPasswordContainer.addClass("form-text text-muted wrong-password-text");
+    wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
+    $(".form-confirm-password").append(wrongPasswordContainer);
+  };
+});
+
+
+
+
+
+
   
   
   /////////// PSEUDOCODE TASKS ///////////

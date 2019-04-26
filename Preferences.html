@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Preferences</title>
+</head>
+<body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+                <div class="container">
+                  <a class="navbar-brand" href="#">
+                        <img src="http://placehold.it/150x50?text=Logo" alt="">
+                      </a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                  <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                      <li class="nav-item active">
+                        <a class="nav-link" href="#">Home
+                              <span class="sr-only">(current)</span>
+                            </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+        </nav>
+        
+        <!-- PREFERENCE INDICATION PAGE -->
+        <div class="container main-content">
+            <form>
+                <!-- LOCATION INPUT - for Google Maps API-->
+                <div class="form-group row mt-5">
+                    <div class="col-auto"> 
+                        <label for="location">Current Location</label>
+                        <input type="text" id="location" class="form-control" placeholder="Enter city or zipcode">
+                        <!-- nice add-on could be a check box to mark current location the same as your hometown -->
+                    </div>
+                </div>
+                <!-- div for google maps API call -->
+                <div class="form-group row" id="mapped-location">
+                </div>
+
+                <!-- AVAILABILITY -->
+                    <!-- A required table in the proj -->
+                    <!-- using an input is my current idea - planned to look into other ways to do this-->
+                        <!-- currently thinking that someone would select whichever inputs 
+                            and then the background of the input would change color (for user confirmation that they selected the time)
+                            and then another attribute would be added so we'd know to grab the value of the input.
+                            Also currently a bit unsure of the best way to set the values on these inputs since they consist of multiple strings -                                     this is why they are currently set to empty strings-->
+                <div class="form-group row">
+                    <div class="col">
+                        <p>Select time blocks on the days you're available:</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label>Monday</label>
+                                    </th>
+                                    <th>
+                                        <label>Tuesday</label>
+                                    </th>
+                                    <th>
+                                        <label>Wednesday</label>
+                                    </th>
+                                    <th>
+                                        <label>Thursday</label>
+                                    </th>
+                                    <th>
+                                        <label>Friday</label>
+                                    </th>
+                                    <th>
+                                        <label>Saturday</label>
+                                    </th>
+                                    <th>
+                                        </label>Sunday</label>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="mo-morning" name="availability" value="" placeholder="Morning" readonly></button></td>
+                                    <td><input type="text" id="tu-morning" name="availability" value="" placeholder="Morning" readonly></button></td>
+                                    <td><input type="text" id="we-morning" name="availability" value="" placeholder="Morning" readonly></button></td>
+                                    <td><input type="text" id="th-morning" name="availability" value="" placeholder="Morning" readonly></button></td>
+                                    <td><input type="text" id="fr-morning" name="availability" value="" placeholder="Morning" readonly></button></td>
+                                    <td><input type="text" id="sa-morning" name="availability" value="" placeholder="Morning" readonly></button></td>
+                                    <td><input type="text" id="su-morning" name="availability" value="" placeholder="Morning" readonly></button></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="mo-afternoon" name="availability" value="" placeholder="Afternoon" readonly></button></td>
+                                    <td><input type="text" id="tu-afternoon" name="availability" value="" placeholder="Afternoon" readonly></button></td>
+                                    <td><input type="text" id="we-afternoon" name="availability" value="" placeholder="Afternoon" readonly></button></td>
+                                    <td><input type="text" id="th-afternoon" name="availability" value="" placeholder="Afternoon" readonly></button></td>
+                                    <td><input type="text" id="fr-afternoon" name="availability" value="" placeholder="Afternoon" readonly></button></td>
+                                    <td><input type="text" id="sa-afternoon" name="availability" value="" placeholder="Afternoon" readonly></button></td>
+                                    <td><input type="text" id="su-afternoon" name="availability" value="" placeholder="Afternoon" readonly></button></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="mo-evening" name="availability" value="" placeholder="Evening" readonly></button></td>
+                                    <td><input type="text" id="tu-evening" name="availability" value="" placeholder="Evening" readonly></button></td>
+                                    <td><input type="text" id="we-evening" name="availability" value="" placeholder="Evening" readonly></button></td>
+                                    <td><input type="text" id="th-evening" name="availability" value="" placeholder="Evening" readonly></button></td>
+                                    <td><input type="text" id="fr-evening" name="availability" value="" placeholder="Evening" readonly></button></td>
+                                    <td><input type="text" id="sa-evening" name="availability" value="" placeholder="Evening" readonly></button></td>
+                                    <td><input type="text" id="su-evening" name="availability" value="" placeholder="Evening" readonly></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GOALS -->
+                    <!-- similarly unsure of how to save the value for this section and the gender preferrence section -->
+                <div class="form-group row">
+                    <div class="col">
+                        <p>What are your current fitness goals? Check all that apply.</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <input type="checkbox" id="strength-goal" name="goals" value="">
+                        <label for="strength-goal">Get Stronger</label>
+                        <br>
+                        <input type="checkbox" id="weight-goal" name="goals" value="">
+                        <label for="weight-goal">Lose Weight</label>
+                        <br>
+                        <input type="checkbox" id="record-goal" name="goals" value="">
+                        <label for="record-goal">Hit a new PR</label>
+                        <!-- insert additional fitness goals -->
+                    </div>
+                </div> 
+                
+                <!-- GENDER PREFERENCE -->
+                <div class="form-group row">
+                        <div class="col">
+                            <p>Do you have a preference on the gender of a Swolemate buddy?</p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <input type="radio" id="same" name="gender-preference" value="same-sex">
+                            <label for="same">Yes, they should share my gender identity.</label>
+                            <br>
+                            <input type="radio" id="no-pref" name="gender-preference" value="neutral">
+                            <label for="no-pref">No, I'm neutral.</label>
+                        </div>
+                    </div> 
+            </form>
+
+        </div>
+</body>
+</html>

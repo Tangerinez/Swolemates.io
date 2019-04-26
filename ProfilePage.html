@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Sign Up!</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+          <a class="navbar-brand" href="#">
+                <img src="http://placehold.it/150x50?text=Logo" alt="">
+              </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                      <span class="sr-only">(current)</span>
+                    </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+    <!-- PROFILE CREATION PAGE -->
+    <div class="container main-content">
+        <form >
+            <!-- PROFILE PHOTO UPLOAD INPUT-->
+            <div class="form-group row mt-5"> 
+                <div class="col-sm-12">
+                    <a href="https://via.placeholder.com/">
+                        <!-- Placeholder Image, in anchor tag for credit of source-->
+                        <img src="https://via.placeholder.com/150">
+                    </a>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <div class="col-md-3">
+                    <label for="profile-photo">Profile Photo</label>
+                    <!-- pic upload button -->
+                    <div class="input-group" id="profile-photo">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="photo-icon">
+                                <i class="far fa-file-image"></i>
+                            </span>
+                        </div>
+                        <div class="cutom-file">
+                            <input type="file" class="custom-file-input  col-auto" id="photo-input" aria-describedby="photo-icon">
+                            <label class="custom-file-label" for="photo-input">Choose photo</label>
+                        </div>
+                </div>
+            </div>
+            
+            </div>
+            
+
+            <!-- GENDER SELECT INPUT-->
+            <div class="form-group row">
+                <div class="col-auto">
+                    <label for="gender">Gender Identity</label>
+                    <select class="form-control form-control-sm" id="gender" name="user-gender">
+                        <option value="" selected select disabled>Select</option> 
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- LOCATION INPUT - w/ space for Google Maps API-->
+            <div class="form-group row">
+                <div class="col-auto"> 
+                    <label for="location">Hometown</label>
+                    <input type="text" id="location" class="form-control" placeholder="Enter city or zipcode">
+                </div>
+            </div>
+            <!-- div for google maps API call -->
+            <div class="form-group row" id="mapped-location">
+            </div>
+
+            <!-- AGE SELECT INPUT -->
+            <div class="form-group row">
+                <div class="col-auto">
+                    <label for="age">Age</label>
+                    <select class="form-control form-control-sm" id="age" name="user-age">
+                        <option value="" selected select disabled>Select</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <!-- insert additional options -->
+                            <!-- Not sure how high in age to go here -- thinking into the 50s-60s?
+                            And of course in JS we'll need a loop of some sort probably-->
+                    </select>
+                </div> 
+            </div>
+
+            <!-- WEIGHT SELECT INPUT -->
+            <div class="form-group row">
+                <div class="col-auto">
+                    <label for="weight">Weight</label>
+                    <select class="form-control form-control-sm" id="weight" name="user-weight">
+                        <option selected select disabled>Select</option>
+                        <option>80-85 lbs</option>
+                        <option>85-90 lbs</option>
+                        <option>90-95 lbs</option>
+                        <!-- ...insert additional options ...-->
+                        <option>300-305 lbs</option>
+                        <!-- similarly to the above, thinking about what is most reasonable -->
+                            <!-- I had a look at BMI weight ranges, but if the app is inclusive, 
+                                it might go above and  beyond those-->
+                    </select>
+                </div>
+            </div>
+
+            <!-- ACTIVITY SELECT INPUT -->
+            <div class="form-group row">
+                <div class="col-auto">
+                    <label for="activity">Activity level</label>
+                    <select class="form-control form-control-sm" id="activity" name="user-activity">
+                        <option selected select disabled>Select</option>
+                        <option>Active 1-2 days/week</option>
+                        <option>Active 3-4 days/week</option>
+                        <option>Active 5-7 days/week</option>
+                    </select>
+                    <!-- I believe no. of days active was the correct measurement? -->
+                </div>
+            </div>
+             
+            <!-- EXPERIENCE LEVEL SELECT INPUT -->
+            <div class="form-group row">
+                <div class="col-auto">
+                    <label for="experience">Experience level</label>
+                    <select class="form-control form-control-sm" id="experience" name="user-experience">
+                        <option select disabled>Select</option>
+                        <!-- will code this with the greater than/less than -->
+                        <option>Less than 1 year</option>
+                        <option>1-2 years</option>
+                        <option>3-4 years</option>
+                        <option>5-6 years</option>
+                        <!-- insert additional options - up to maybe 20 years -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- WHY SWOLEMATES BLURB INPUT -->
+            <div class="form-group row">
+                <div class="col">
+                    <label for="why-swole">Why Swolemates?</label>
+                    <textarea class="form-control" id="why-swole" name="why-swole" rows="5" placeholder="Write your story here..."></textarea>
+                </div>
+            </div>
+
+            <!-- PROCEED BUTTON -->
+            <button class="btn btn-primary" type="submit">Next Page</button>
+        </form> 
+    </div>
+</body>
+</html>

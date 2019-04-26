@@ -5,10 +5,13 @@
 
 .containerStart {
     padding: 300px;
-    background-color: rgb(192, 190, 190);
 }
 
 #matchpage-body {
+    background-size: cover;
+}
+
+#openingScreen-body {
     background-size: cover;
 }
 
@@ -17,10 +20,6 @@
     float: none; /* Added */
     margin-bottom: 10px; /* Added */
     margin-top: 3%;
-}
-
-.card-footer {
-    text-align: center;
 }
 
 #login {
@@ -74,4 +73,32 @@
 
 .wrong-password-text {
     color: red;
+}
+
+.existing-email-text {
+    color: red;
+}
+
+.profile-modal {
+    margin-top: -6%;
+}
+
+#sign-up-button {
+    background-color: #ff6f61;
+    font-weight: bold;
+    border: none;
+    margin-top: 2em;
+}
+
+#login-button {
+    background-color: #ff6f61;
+    font-weight: bold;
+    border: none;
+    margin-top: 2em;
+}
+
+#sign-up-button:hover, #login-button:hover {
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }

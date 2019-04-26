@@ -11,23 +11,47 @@
   firebase.initializeApp(config);
   var db = firebase.firestore();
 
-  ///////////// GLOBAL VARIABLES ///////////////
-  
 
-  
-
-
-
-  // ON-CLICK function for transferring user's email and password into FireStore
+  ///////////// ON-CLICK function for transferring user's email and password into FireStore ////////////
   $(".get-started-button").on("click", function(event) {
   
   event.preventDefault();
   
-  var email = $("#input-email").val(); 
-  var password = $("#input-password").val(); 
-  var confirmPassword = $("#input-confirmPassword").val();
+  var email = $("#input-email").val();              // user's email input
+  var password = $("#input-password").val();             // user's password input
+  var confirmPassword = $("#input-confirmPassword").val();               // user's Confirm Password input
+  var existingEmailArray = [];
 
-  if (password === confirmPassword) {
+  var docRef = db.collection("userLoginInfo").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      existingEmailArray.push(doc.data().email);     // pushes every email that is added from FireStore into an existing Email Array
+    });
+    console.log(existingEmailArray);
+  });
+  console.log(docRef);
+
+  // CHECKS IF THE EMAIL ENTERED IS ALREADY TAKEN 
+  /* if (existingEmailArray.includes(email) === true) {      // ERROR: RIGHT NOW THIS IS DISPLAYING FALSE EVERY TIME!!!
+    var wrongEmailContainer = $("<small>");
+    wrongEmailContainer.addClass("form-text text-muted existing-email-text");
+    wrongEmailContainer.text("This email is already registered. Please go bo back to the login screen or use a different email.");
+    $(".email-input-form").append(wrongEmailContainer);
+  } else {
+      db.collection("userLoginInfo").doc().set({
+      email: email,
+      password: password,
+      })
+      .then(function() {
+        console.log("Document successfully written!");
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+  }; */
+
+  
+  // CHECKS IF THE "PASSWORD" ENTERED MATCHES THE "CONFIRM PASSWORD" ENTERED
+   if (password === confirmPassword) {
     db.collection("userLoginInfo").doc().set({
       email: email,
       password: password,
@@ -44,16 +68,47 @@
     wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
     $(".form-confirm-password").append(wrongPasswordContainer);
   };
+
 });
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
+$(".profile-completion-button").on("click", function(event) {
+
+  event.preventDefault();
+
+  var gender = $("#gender").val();             // user's gender input
+  var location = $("#location").val();           // user's location input
+  var age = $("#age").val();             // user's age input
+  var weight = $("#weight").val();            // user's weight input
+  var activityLevel = $("#activity").val();             // user's activity level input
+  var experienceLevel = $("#experience").val();             // user's experience level input
+  var profileBlurb = $("#why-swole").val();           // user's profile blurb input
+  var profilePicture = $("#photo-input").val();
+
+  db.collection("userProfileInfo").doc().set({
+    gender: gender,
+    location: location,
+    age: age,
+    weight: weight,
+    activityLevel: activityLevel,
+    experienceLevel: experienceLevel,
+    profileBlurb: profileBlurb,
+    profilePicture: profilePicture
+  })
+  .then(function() {
+    console.log("Document successfully written!");
+  })
+  .catch(function(error) {
+    console.error("Error writing document: ", error);
+  });
+});           
 
 
 
 
 
-
-  
-  
-  /////////// PSEUDOCODE TASKS ///////////
+/////////// PSEUDOCODE TASKS ///////////
   
   /* 
 DATA STORAGE:

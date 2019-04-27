@@ -116,3 +116,11 @@
     margin-top: 2%;
     margin-bottom: -3%;
 }
+
+#modal15 {
+   overflow-y: auto;
+}
+
+#modal20 {
+    overflow-y: auto;
+ }

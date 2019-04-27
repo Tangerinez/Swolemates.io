@@ -8,6 +8,7 @@
     messagingSenderId: "522806249949"
   };
 
+
   firebase.initializeApp(config);
   var db = firebase.firestore();
 
@@ -72,10 +73,22 @@
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Google maps API Request -- Autocomplete 
+
+function initialize() {
+  var input = document.getElementById('location');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+
 /////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
 $(".profile-completion-button").on("click", function(event) {
 
   event.preventDefault();
+
 
   var gender = $("#gender").val();             // user's gender input
   var userLocation = $("#location").val();           // user's location input
@@ -133,6 +146,7 @@ $("#finish-user-info-button").on("click", function(event) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
 /////////// PSEUDOCODE TASKS ///////////
   
   /* 
@@ -152,6 +166,7 @@ information and their picture from Firebase gets transferred to the Current Matc
 
 APIs
 - Using the Google Maps Location API (Library, not AJAX request) for when the user is filling out their profile and their location preferences
+
 
 Dynamic Elements 
 - Create a card for the user matches

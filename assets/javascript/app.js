@@ -13,6 +13,13 @@
   var db = firebase.firestore();
 
 
+
+  ///////////// GLOBAL VARIABLES /////////////////
+
+  var userEmail = "";
+  var userPassword = "";
+
+
   ///////////// ON-CLICK function for transferring user's email and password into FireStore ////////////
   $(".get-started-button").on("click", function(event) {
   
@@ -73,6 +80,41 @@
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF EMAIL AND PASSWORD ARE CORRECT ///////////////
+$(".sign-in-button").on("click", function() {
+  var loginEmail = $("#login-email").val();              // user's email input
+  var loginPassword = $("#login-password").val();             // user's password input
+  var existingEmails = [];
+  var existingPasswords = [];
+  var matchingUserInfoCount = 0;
+
+  var loginInfoCheck = db.collection("userLoginInfo").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      existingEmails.push(doc.data().email);
+      existingPasswords.push(doc.data().password);
+      if ((doc.data().email === loginEmail) && doc.data().password === loginPassword) {          // CHECKS IF EMAIL AND PASSWORD ARE CORRECT
+        window.location.href = "MatchMe.html";
+        userEmail = loginEmail;
+        userPassword = loginPassword;
+      }
+    });
+    for (var i = 0; i<existingEmails.length; i++) {               // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF EMAIL AND PASSWORD ARE INCORRECT
+      if ((existingEmails[i] === loginEmail) && existingPasswords[i] === loginPassword) {       
+        matchingUserInfoCount += 1;
+      };
+    };
+      if (matchingUserInfoCount !== 1) {
+        var loginErrorContainer = $("<small>");
+        loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
+        loginErrorContainer.text("Your email and password information is incorrect. Please try again.");
+        $(".user-login-password-container").append(loginErrorContainer); 
+      };
+  });
+console.log(loginInfoCheck);
+});
+
+
+
 // Google maps API Request -- Autocomplete 
 
 function initialize() {
@@ -80,8 +122,6 @@ function initialize() {
   var autocomplete = new google.maps.places.Autocomplete(input);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
-
-
 
 
 /////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////

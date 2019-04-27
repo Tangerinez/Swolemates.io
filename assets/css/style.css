@@ -76,7 +76,11 @@
 }
 
 .existing-email-text {
-    color: red;
+    color: red !important;
+}
+
+.wrong-loginInfo-text {
+    color: red !important;
 }
 
 .profile-modal {
@@ -105,4 +109,10 @@
 
 .pac-container {
     z-index: 1050 !important;
+}
+
+.wrong-loginInfo-text {
+    margin-left: 4%;
+    margin-top: 2%;
+    margin-bottom: -3%;
 }

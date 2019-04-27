@@ -264,13 +264,106 @@
                     </div>
                     <!--------------------- NEXT BUTTON TO PREFERENCES -------------------->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary profile-completion-button">Next</button>
+                        <button type="button" class="btn btn-primary profile-completion-button" data-toggle="modal" data-target="#modal20">Next</button>
                     </div>
                 </div>
             </div>
         </div>
     <!-------------------------------------- END OF PROFILE PAGE MODAL -------------------------------------------->
+
+
+    <!----------------------------------------- BEGINNING OF PREFERENCES MODAL -------------------------------------->
+        <div class="modal fade" id="modal20" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Preferences</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <!---------------------- Preferences Modal Body --------------------->
+                    <div class="container main-content preferences-modal">
+                        <div class="modal-body">
+                        <form>
+                        <!----------------- LOCATION INPUT - for Google Maps API -------------------->
+                        <div id="location-label"> 
+                            <label for="location">Location</label>
+                            <input type="text" id="user-preference-location" class="form-control" placeholder="Enter city or zipcode">
+                        </div>
+                        <!-- div for google maps API call -->
+                        <div class="form-group row" id="mapped-location">
+                        </div>
+                        <!--------------------- AVAILABILITY --------------------->
+                        <!------------------- WILL BE MODIFIED NOW --------------------->
+                        <div class="form-group row">
+                            <div class="col">
+                                <p>Select time blocks on the days you're available:</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col">
+                                <input type="checkbox" id="user-availability" name="availability" value="">
+                                <label for="strength-goal">Monday</label>
+                                    <br>
+                                <input type="checkbox" id="user-availability" name="availability" value="">
+                                <label for="weight-goal">Tuesday</label>
+                                    <br>
+                                <input type="checkbox" id="user-availability" name="availability" value="">
+                                <label for="record-goal">Wednesday</label>
+                                    <br>
+                                <input type="checkbox" id="user-availability" name="availability" value="">
+                                <label for="record-goal">Thursday</label>
+                                    <br>
+                                <input type="checkbox" id="user-availability" name="availability" value="">
+                                <label for="record-goal">Friday</label>
+                            </div>
+                        </div>
+                        <!-------------------- WORKOUT GOALS --------------------->
+                        <div class="form-group row">
+                            <div class="col">
+                                <p>What are your current fitness goals? Check all that apply.</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col">
+                                <select class="form-control form-control-sm" id="fitness-goal" name="user-experience">
+                                    <option select disabled>Select</option>
+                                    <option>Get stronger</option>
+                                    <option>Burn fat</option>
+                                    <option>Hit a new PR</option>
+                                    <option>Increase endurance</option>
+                                </select>
+                            </div>
+                        </div> 
+                        <!------------- GENDER PREFERENCE -------------->
+                        <div class="form-group row">
+                            <div class="col">
+                                <p>Do you have a preference on the gender of a Swolemate buddy?</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col">
+                                <input type="radio" id="gender-preference" name="gender-preference" value="same-sex">
+                                <label for="same">Yes, they should share my gender identity.</label>
+                                    <br>
+                                <input type="radio" id="gender-preference" name="gender-preference" value="neutral">
+                                <label for="no-pref">No, I'm neutral.</label>
+                            </div>
+                        </div> 
+                        </form>
+                    </div>
+                </div>
+                <!--------------------- Finish Preferences Button ------------------>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary profile-completion-button" id="finish-user-info-button">Finish</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+<!------------------------------------------ END OF PREFERENCE PAGE MODAL ---------------------------------------->
+</div>
     
     <!-------------- FOOTER --------------->
 <div class="card-footer text-muted match-footer">Copyright 2019 © </div>

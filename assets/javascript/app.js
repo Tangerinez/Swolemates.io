@@ -78,7 +78,7 @@ $(".profile-completion-button").on("click", function(event) {
   event.preventDefault();
 
   var gender = $("#gender").val();             // user's gender input
-  var location = $("#location").val();           // user's location input
+  var userLocation = $("#location").val();           // user's location input
   var age = $("#age").val();             // user's age input
   var weight = $("#weight").val();            // user's weight input
   var activityLevel = $("#activity").val();             // user's activity level input
@@ -88,7 +88,7 @@ $(".profile-completion-button").on("click", function(event) {
 
   db.collection("userProfileInfo").doc().set({
     gender: gender,
-    location: location,
+    userLocation: userLocation,
     age: age,
     weight: weight,
     activityLevel: activityLevel,
@@ -104,8 +104,33 @@ $(".profile-completion-button").on("click", function(event) {
   });
 });           
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
+$("#finish-user-info-button").on("click", function(event) {
 
+  event.preventDefault();
+
+  var preferenceLocation = $("#user-preference-location").val();           // user's location preference input
+  var userAvailability = $("#user-availability").val();             // user's age input
+  var fitnessGoals = $("#fitness-goal").val();            // user's weight input
+  var swolemateGender = $("#gender-preference").val();             // user's activity level input
+
+  db.collection("userPreferencesInfo").doc().set({
+    userPreferenceLocation: preferenceLocation,
+    userAvailability: userAvailability,
+    fitnessGoals: fitnessGoals,
+    swolemateGender: swolemateGender
+  })
+  .then(function() {
+    console.log("Document successfully written!");
+  })
+  .catch(function(error) {
+    console.error("Error writing document: ", error);
+  });
+});    
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////// PSEUDOCODE TASKS ///////////

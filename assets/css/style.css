@@ -72,7 +72,7 @@
 }
 
 .wrong-password-text {
-    color: red;
+    color: red !important;
 }
 
 .existing-email-text {

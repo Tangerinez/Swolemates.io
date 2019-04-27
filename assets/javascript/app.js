@@ -74,13 +74,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Google maps API Request -- Autocomplete 
-
+// location profile request 
 function initialize() {
   var input = document.getElementById('location');
   var autocomplete = new google.maps.places.Autocomplete(input);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+//location preferences request 
 
+function initialize2() {
+  var inputUser = document.getElementById('user-preference-location');
+  var autocomplete = new google.maps.places.Autocomplete(inputUser);
+}
+google.maps.event.addDomListener(window, 'load', initialize2);
 
 
 

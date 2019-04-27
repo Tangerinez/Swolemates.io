@@ -25,7 +25,7 @@
   
   event.preventDefault();
   
-  var email = $("#input-email").val();              // user's email input
+  var username = $("#input-username").val();              // user's email input
   var password = $("#input-password").val();             // user's password input
   var confirmPassword = $("#input-confirmPassword").val();               // user's Confirm Password input
   var existingEmailArray = [];
@@ -61,7 +61,7 @@
   // CHECKS IF THE "PASSWORD" ENTERED MATCHES THE "CONFIRM PASSWORD" ENTERED
    if (password === confirmPassword) {
     db.collection("userLoginInfo").doc().set({
-      email: email,
+      username: username,
       password: password,
     })
     .then(function() {
@@ -82,9 +82,9 @@
 
 /////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF EMAIL AND PASSWORD ARE CORRECT ///////////////
 $(".sign-in-button").on("click", function() {
-  var loginEmail = $("#login-email").val();              // user's email input
+  var loginUsername = $("#login-username").val();              // user's email input
   var loginPassword = $("#login-password").val();             // user's password input
-  var existingEmails = [];
+  var existingUsernames = [];
   var existingPasswords = [];
   var matchingUserInfoCount = 0;
 
@@ -92,14 +92,14 @@ $(".sign-in-button").on("click", function() {
     querySnapshot.forEach(function(doc) {
       existingEmails.push(doc.data().email);
       existingPasswords.push(doc.data().password);
-      if ((doc.data().email === loginEmail) && doc.data().password === loginPassword) {          // CHECKS IF EMAIL AND PASSWORD ARE CORRECT
+      if ((doc.data().username === loginUsername) && doc.data().password === loginPassword) {          // CHECKS IF EMAIL AND PASSWORD ARE CORRECT
         window.location.href = "MatchMe.html";
-        userEmail = loginEmail;
+        userUsername = loginUsername;
         userPassword = loginPassword;
       }
     });
-    for (var i = 0; i<existingEmails.length; i++) {               // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF EMAIL AND PASSWORD ARE INCORRECT
-      if ((existingEmails[i] === loginEmail) && existingPasswords[i] === loginPassword) {       
+    for (var i = 0; i<existingUsernames.length; i++) {               // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF EMAIL AND PASSWORD ARE INCORRECT
+      if ((existingUsernames[i] === loginUsername) && existingPasswords[i] === loginPassword) {       
         matchingUserInfoCount += 1;
       };
     };

@@ -13,12 +13,19 @@
   var db = firebase.firestore();
 
 
+
+  ///////////// GLOBAL VARIABLES /////////////////
+
+  var userEmail = "";
+  var userPassword = "";
+
+
   ///////////// ON-CLICK function for transferring user's email and password into FireStore ////////////
   $(".get-started-button").on("click", function(event) {
   
   event.preventDefault();
   
-  var email = $("#input-email").val();              // user's email input
+  var username = $("#input-username").val();              // user's email input
   var password = $("#input-password").val();             // user's password input
   var confirmPassword = $("#input-confirmPassword").val();               // user's Confirm Password input
   var existingEmailArray = [];
@@ -54,7 +61,7 @@
   // CHECKS IF THE "PASSWORD" ENTERED MATCHES THE "CONFIRM PASSWORD" ENTERED
    if (password === confirmPassword) {
     db.collection("userLoginInfo").doc().set({
-      email: email,
+      username: username,
       password: password,
     })
     .then(function() {
@@ -73,16 +80,55 @@
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Google maps API Request -- Autocomplete 
+/////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF EMAIL AND PASSWORD ARE CORRECT ///////////////
+$(".sign-in-button").on("click", function() {
+  var loginUsername = $("#login-username").val();              // user's email input
+  var loginPassword = $("#login-password").val();             // user's password input
+  var existingUsernames = [];
+  var existingPasswords = [];
+  var matchingUserInfoCount = 0;
 
+  var loginInfoCheck = db.collection("userLoginInfo").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      existingEmails.push(doc.data().email);
+      existingPasswords.push(doc.data().password);
+      if ((doc.data().username === loginUsername) && doc.data().password === loginPassword) {          // CHECKS IF EMAIL AND PASSWORD ARE CORRECT
+        window.location.href = "MatchMe.html";
+        userUsername = loginUsername;
+        userPassword = loginPassword;
+      }
+    });
+    for (var i = 0; i<existingUsernames.length; i++) {               // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF EMAIL AND PASSWORD ARE INCORRECT
+      if ((existingUsernames[i] === loginUsername) && existingPasswords[i] === loginPassword) {       
+        matchingUserInfoCount += 1;
+      };
+    };
+      if (matchingUserInfoCount !== 1) {
+        var loginErrorContainer = $("<small>");
+        loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
+        loginErrorContainer.text("Your email and password information is incorrect. Please try again.");
+        $(".user-login-password-container").append(loginErrorContainer); 
+      };
+  });
+console.log(loginInfoCheck);
+});
+
+
+
+// Google maps API Request -- Autocomplete 
+// location profile request 
 function initialize() {
   var input = document.getElementById('location');
   var autocomplete = new google.maps.places.Autocomplete(input);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+//location preferences request 
 
-
-
+function initialize2() {
+  var inputUser = document.getElementById('user-preference-location');
+  var autocomplete = new google.maps.places.Autocomplete(inputUser);
+}
+google.maps.event.addDomListener(window, 'load', initialize2);
 
 /////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
 $(".profile-completion-button").on("click", function(event) {

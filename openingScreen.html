@@ -58,7 +58,7 @@
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" id="login-email-password-container">
                         <h5 class="modal-title" id="exampleModalCenterTitle">Login</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -69,19 +69,19 @@
                         <form>
                         <div class="form-group row">
                             <div class="col-sm-12">
-                            <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            <input type="username" class="form-control" id="login-username" placeholder="Username">
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row user-login-password-container">
                             <div class="col-sm-12">
-                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                                <input type="password" class="form-control" id="login-password" placeholder="Password">
                             </div>
                         </div>
                         </form>    
                     </div>
                     <!------------------ SIGN-IN BUTTON ----------------->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Sign In</button>
+                        <button type="button" class="btn btn-primary sign-in-button">Sign In</button>
                     </div>
                 </div>
             </div>
@@ -103,14 +103,14 @@
                         <!----------------- SIGN-UP WITH EMAIL AND PASSWORD ----------------->
                         <form id="signup-form">
                             <div class="form-group email-input-form">
-                                <label for="formGroupExampleInput">Email</label>
-                                <input type="text" class="form-control" name="input-email" id="input-email" placeholder="johndoe@gmail.com">
+                                <label for="formGroupExampleInput">Username</label>
+                                <input type="text" class="form-control" name="input-username" id="input-username" placeholder="">
                             </div>
                             <div class="form-group">
                                 <label for="inputPassword5" id="password-testing">Password</label>
                                 <input type="password" name="input-password" id="input-password" class="form-control" aria-describedby="passwordHelpBlock">
                                 <small id="passwordHelpBlock" class="form-text text-muted">
-  Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                    Your password must be 8-20 characters long.
                                 </small>
                             </div>  
                             <div class="form-group form-confirm-password">
@@ -121,7 +121,7 @@
                         </div>
                         <!------------------ GET STARTED BUTTON ----------------->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary get-started-button" data-toggle="modal" data-target="#modal15">Get Started</button>
+                            <button type="button" class="btn btn-primary get-started-button" data-toggle="modal" data-target="#modal15" data-dismiss="modal" aria-label="Close">Get Started</button>
                         </div>
                     </div>
                 </div>
@@ -270,7 +270,7 @@
                     </div>
                     <!--------------------- NEXT BUTTON TO PREFERENCES -------------------->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary profile-completion-button" data-toggle="modal" data-target="#modal20">Next</button>
+                        <button type="button" class="btn btn-primary profile-completion-button" data-toggle="modal" data-target="#modal20" data-dismiss="modal" aria-label="Close">Next</button>
                     </div>
                 </div>
             </div>
@@ -295,7 +295,7 @@
                         <!----------------- LOCATION INPUT - for Google Maps API -------------------->
                         <div id="location-label"> 
                             <label for="location">Location</label>
-                            <input type="text" id="user-preference-location" class="form-control" placeholder="Enter city or zipcode">
+                            <input type="text" id="user-preference-location" class="form-control" placeholder="Enter zipcode">
                         </div>
                         <!-- div for google maps API call -->
                         <div class="form-group row" id="mapped-location">
@@ -362,7 +362,7 @@
                 </div>
                 <!--------------------- Finish Preferences Button ------------------>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary profile-completion-button" id="finish-user-info-button">Finish</button>
+                    <button onclick="location.href='MatchMe.html';" type="button" class="btn btn-default btn-primary profile-completion-button" id="finish-user-info-button">Finish</button>
                 </div>
             </div>
         </div>

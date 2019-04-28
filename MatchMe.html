@@ -12,7 +12,7 @@
     <title>Match Me</title>
 
 </head>
-<body>
+<body id="matchMe-body" background="assets/images/background.png" >
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
         <div class="container">
           <a class="navbar-brand" href="#">
@@ -45,19 +45,27 @@
     <div class="containerMatch">
         <h1 class="display-4" id="match">Match Central</h1>
         <br>
+
         <button type="button" class="btn btn-primary btn-lg btn-block" id="get-matched">Match Me! </button>
         <br>
         <button type="button" class="btn btn-secondary btn-lg btn-block" id="show-matches">Current Matches</button>
     </div>
-  
+ 
+  <!-------------- FOOTER --------------->  
     
-    <div class="card-footer text-muted">Copyright 2019 © </div>
+<div class="card-footer text-muted match-footer">Copyright 2019 © </div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-firestore.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <script src="assets/javascript/dynamicProfileCards.js"></script>
+<script src="assets/javascript/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </body>
 </html>

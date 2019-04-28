@@ -115,13 +115,13 @@
                             </div>  
                             <div class="form-group form-confirm-password">
                                 <label for="formGroupExampleInput">Confirm Password</label>
-                                <input type="text" class="form-control" id="input-confirmPassword" placeholder="">
+                                <input type="password" class="form-control" id="input-confirmPassword" placeholder="">
                             </div>
                         </form>    
                         </div>
                         <!------------------ GET STARTED BUTTON ----------------->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary get-started-button" data-toggle="modal" data-target="#modal15" data-dismiss="#modal-body" aria-label="Close">Get Started</button>
+                            <button type="button" class="btn btn-primary get-started-button" data-toggle="modal" data-target="#modal15" data-dismiss="modal" aria-label="Close">Get Started</button>
                         </div>
                     </div>
                 </div>
@@ -141,8 +141,15 @@
                         <div class="container main-content profile-modal">
                             <div class="modal-body">    
                             <form>
+                            <!-- NAME INPUT -->
+                            <div class="form-group row mt-5">
+                                <div class="col">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="First and last name">
+                                </div>
+                            </div>
                             <!-- PROFILE PHOTO UPLOAD INPUT-->
-                            <div class="form-group row mt-5"> 
+                            <div class="form-group row"> 
                                 <div class="col-sm-12">
                                 <a href="https://via.placeholder.com/">
                                 <!-- Placeholder Image, in anchor tag for credit of source-->
@@ -241,7 +248,7 @@
                                 <div class="col-auto">
                                     <label for="experience">Experience level</label>
                                     <select class="form-control form-control-sm" id="experience" name="user-experience">
-                                        <option select disabled>Select</option>
+                                        <option selected select disabled>Select</option>
                                         <!-- will code this with the greater than/less than -->
                                         <option>Less than 1 year</option>
                                         <option>1-2 years</option>
@@ -288,7 +295,7 @@
                         <!----------------- LOCATION INPUT - for Google Maps API -------------------->
                         <div id="location-label"> 
                             <label for="location">Location</label>
-                            <input type="text" id="user-preference-location" class="form-control" placeholder="Enter city or zipcode">
+                            <input type="text" id="user-preference-location" class="form-control" placeholder="Enter zipcode">
                         </div>
                         <!-- div for google maps API call -->
                         <div class="form-group row" id="mapped-location">
@@ -377,6 +384,7 @@
 <!-- JS file, then jQuery, then Popper.js, then Bootstrap JS -->
 <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-firestore.js"></script>
+<!-- <script src="assets/javascript/dynamicProfileCards.js"></script> -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

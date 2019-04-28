@@ -7,6 +7,10 @@
     padding: 300px;
 }
 
+#matchMe-body {
+    background-size: cover;
+}
+
 #matchpage-body {
     background-size: cover;
 }
@@ -30,6 +34,10 @@
 .containerLogin {
     padding: 250px;
     background-color: rgb(192, 190, 190);
+}
+
+.containerMatch {
+    padding: 250px;
 }
 
 #matches-info {
@@ -101,7 +109,21 @@
     margin-top: 2em;
 }
 
-#sign-up-button:hover, #login-button:hover {
+#matchMe {
+    background-color: #ff6f61;
+    font-weight: bold;
+    border: none;
+    margin-top: 2em;
+}
+
+#currentMatch {
+    background-color: #ff6f61;
+    font-weight: bold;
+    border: none;
+    margin-top: 2em;
+}
+
+#sign-up-button:hover, #login-button:hover, #matchMe:hover, #currentMatch:hover {
   box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
@@ -116,3 +138,12 @@
     margin-top: 2%;
     margin-bottom: -3%;
 }
+
+#modal15 {
+   overflow-y: auto;
+}
+
+#modal20 {
+    overflow-y: auto;
+}
+

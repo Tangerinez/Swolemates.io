@@ -16,52 +16,61 @@
 
   ///////////// GLOBAL VARIABLES /////////////////
 
-  var userEmail = "";
+  var userUsername = "";
   var userPassword = "";
 
 
-  ///////////// ON-CLICK function for transferring user's email and password into FireStore ////////////
+  ///////////// ON-CLICK function for transferring user's username and password into FireStore ////////////
   $(".get-started-button").on("click", function(event) {
   
   event.preventDefault();
   
-  var email = $("#input-email").val();              // user's email input
+  var username = $("#input-username").val();              // user's username input
   var password = $("#input-password").val();             // user's password input
   var confirmPassword = $("#input-confirmPassword").val();               // user's Confirm Password input
-  var existingEmailArray = [];
+  var existingUsernameArray = [];
+  var availableUserName = "";
+  var existingUsernameCount = 0;
 
   var docRef = db.collection("userLoginInfo").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
-      existingEmailArray.push(doc.data().email);     // pushes every email that is added from FireStore into an existing Email Array
+      if (existingUsernameArray.includes(doc.data().username) === false) {
+      existingUsernameArray.push(doc.data().username);     // pushes every username that is added from FireStore into an existing Username Array
+      };
     });
-    console.log(existingEmailArray);
+    console.log(existingUsernameArray);
+    if (existingUsernameArray.includes(username) === true) {        // NEED TO FIX - KEEPS APPENDING EVEN FOR NON-EXISTING USERNAMES!
+      var wrongUsernameContainer = $("<small>");
+      wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
+      wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
+      $(".username-input-form").append(wrongUsernameContainer);
+      };
   });
   console.log(docRef);
 
-  // CHECKS IF THE EMAIL ENTERED IS ALREADY TAKEN 
-  /* if (existingEmailArray.includes(email) === true) {      // ERROR: RIGHT NOW THIS IS DISPLAYING FALSE EVERY TIME!!!
-    var wrongEmailContainer = $("<small>");
-    wrongEmailContainer.addClass("form-text text-muted existing-email-text");
-    wrongEmailContainer.text("This email is already registered. Please go bo back to the login screen or use a different email.");
-    $(".email-input-form").append(wrongEmailContainer);
-  } else {
-      db.collection("userLoginInfo").doc().set({
-      email: email,
-      password: password,
-      })
-      .then(function() {
-        console.log("Document successfully written!");
-      })
-      .catch(function(error) {
-        console.error("Error writing document: ", error);
-      });
-  }; */
+  // CHECKS IF THE USERNAME ENTERED IS ALREADY TAKEN 
+  /*
+  for (var i = 0; i<existingUsernameArray.length; i++) {
+   if (existingUsernameArray[i] === username) {        // if user's username input is already equal to an existing username
+    existingUsernameCount += 1;
+   };
+  };
+  console.log(existingUsernameArray);
+  console.log(existingUsernameCount);    
+   if (existingUsernameCount > 0) {
+    var wrongUsernameContainer = $("<small>");
+    wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
+    wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
+    $(".username-input-form").append(wrongUsernameContainer);
+    };
+  */
+    
 
   
   // CHECKS IF THE "PASSWORD" ENTERED MATCHES THE "CONFIRM PASSWORD" ENTERED
    if (password === confirmPassword) {
     db.collection("userLoginInfo").doc().set({
-      email: email,
+      username: username,
       password: password,
     })
     .then(function() {
@@ -76,42 +85,47 @@
     wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
     $(".form-confirm-password").append(wrongPasswordContainer);
   };
-
+  $("#input-username").val("");
+  $("#input-password").val("");
+  $("#input-confirmPassword").val("");
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF EMAIL AND PASSWORD ARE CORRECT ///////////////
+/////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF USERNAME AND PASSWORD ARE CORRECT ///////////////
 $(".sign-in-button").on("click", function() {
-  var loginEmail = $("#login-email").val();              // user's email input
+  var loginUsername = $("#login-username").val();              // user's username input
   var loginPassword = $("#login-password").val();             // user's password input
-  var existingEmails = [];
+  var existingUsernames = [];
   var existingPasswords = [];
   var matchingUserInfoCount = 0;
 
   var loginInfoCheck = db.collection("userLoginInfo").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
-      existingEmails.push(doc.data().email);
+      existingUsernames.push(doc.data().username);
       existingPasswords.push(doc.data().password);
-      if ((doc.data().email === loginEmail) && doc.data().password === loginPassword) {          // CHECKS IF EMAIL AND PASSWORD ARE CORRECT
+      if ((doc.data().username === loginUsername) && doc.data().password === loginPassword) {          // CHECKS IF USERNAME AND PASSWORD ARE CORRECT
         window.location.href = "MatchMe.html";
-        userEmail = loginEmail;
+        userUsername = loginUsername;
         userPassword = loginPassword;
       }
     });
-    for (var i = 0; i<existingEmails.length; i++) {               // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF EMAIL AND PASSWORD ARE INCORRECT
-      if ((existingEmails[i] === loginEmail) && existingPasswords[i] === loginPassword) {       
+    for (var i = 0; i<existingUsernames.length; i++) {               // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT
+      if ((existingUsernames[i] === loginUsername) && existingPasswords[i] === loginPassword) {       
         matchingUserInfoCount += 1;
       };
     };
       if (matchingUserInfoCount !== 1) {
         var loginErrorContainer = $("<small>");
         loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
-        loginErrorContainer.text("Your email and password information is incorrect. Please try again.");
+        loginErrorContainer.text("Your username and/or password information are incorrect. Please try again.");
         $(".user-login-password-container").append(loginErrorContainer); 
       };
   });
 console.log(loginInfoCheck);
+$("#login-username").val(""); 
+$("#login-password").val(""); 
 });
+
 
 
 
@@ -197,14 +211,14 @@ $("#finish-user-info-button").on("click", function(event) {
   
   /* 
 DATA STORAGE:
-- Sign-up page: Create on-click event for when user clicks on the "Get Started" button, the email and username values get stored in FireBase
+- Sign-up page: Create on-click event for when user clicks on the "Get Started" button, the username and username values get stored in FireBase
 - Sign-up profile page: Create on-click event for when user clicks on the "Next" button, the user's profile information gets stored in FireBase
 - Sign-up preferences page: Create on-click event for when user clicks on the "Create Profile" button, the user's preferences information gets stored in FireBase
 
 
 GRABBING DATA:
 - Login page: Create on-click event for when user clicks on the "Sign in" button, the values that the user inputs get compared to the data in firebase and is checked for match (create an error case)
-inputs for email and username are checked with those values in FireBase - if they match, then the user gets transferred to the next page
+inputs for username and password are checked with those values in FireBase - if they match, then the user gets transferred to the next page
 - Match Me page: Create on-click event for when user clicks on the "Match Me!" button, the user's preferences from FireBase is compared with other user's preferences in FireBase (use points)
     - Sketch out the scoring algorithm that we will use to match user's together
 - Potential Matches page: Create on-click event for when user clicks on the heart button on another person's card, that person's profile 

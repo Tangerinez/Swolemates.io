@@ -241,27 +241,61 @@ $("#finish-user-info-button").on("click", function(event) {
 
 // Score function 
 
+// availibility will be dynamically appended into the array based on query selection, the array will be compared to stored arrays in firebase
+var matches = [ 
+ {name: score},
+];
+var goal = [];
+var availability = [];
+var score = 0;
+
 function score () {
+  for (i=0; i < availability.length; i++);
   // score ++ for each match on availability (eg +1 for Week Day Mornings, +1 for Weekend Afternoon)
-  // score ++ for goal match ; 
-  // return score 
+  if (userAvailability === availability[i]){
+    score ++;
+  };
+  for (i=0; i < goal.length; i++) {
+    if(fitnessGoals === goal[i]); 
+    score ++;
+  }
+  return score; 
 }
 
 
 function matchGenerator (){
-  // if statement Location === location ;
-  // if statement Gender Preference === Gender Preference ;
-  // if score > 2 ;
-  
-  // Run function Score 
-
+  //run function score
+  score();
+  // determine if match 
+  if (userPreferenceLocation === preferenceLocation 
+    && swolemateGender === gender 
+    && score >=2 ) {
+      //match goes to firebase 
+    } 
 // else not a match 
+  else {
+    //not a match 
+  }
 
+}
+
+function scoreMatch() {
+  for (i=0; i < match.length; i++){
+    var matchScore = ""    // some value from firbase created array of matches 
+  
+  };
 }
 
 function displayMatch () {
-// display 3 matches with highest score 
+// pull from firebase
+
+//input card attr to be appended 
+
+$(".card").append()
+
 }
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -141,21 +141,21 @@
     margin-top: 2em;
 }
 
-#matchMe {
+#get-matched {
     background-color: #ff6f61;
     font-weight: bold;
     border: none;
     margin-top: 2em;
 }
 
-#currentMatch {
+#show-matches {
     background-color: #ff6f61;
     font-weight: bold;
     border: none;
     margin-top: 2em;
 }
 
-#sign-up-button:hover, #login-button:hover, #matchMe:hover, #currentMatch:hover {
+#sign-up-button:hover, #login-button:hover, #get-matched:hover, #show-matches:hover {
   box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);

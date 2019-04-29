@@ -128,21 +128,55 @@ $("#login-password").val("");
 
 
 
-
-// Google maps API Request -- Autocomplete 
+/////////////////// Google maps API Request -- Autocomplete ////////////////////////
 // location profile request 
-function initialize() {
+function initiate() {
   var input = document.getElementById('location');
   var autocomplete = new google.maps.places.Autocomplete(input);
+  console.log("i worked");
 }
-google.maps.event.addDomListener(window, 'load', initialize);
+google.maps.event.addDomListener(window, 'load', initiate);
 //location preferences request 
 
-function initialize2() {
+function initiate2() {
   var inputUser = document.getElementById('user-preference-location');
   var autocomplete = new google.maps.places.Autocomplete(inputUser);
 }
-google.maps.event.addDomListener(window, 'load', initialize2);
+google.maps.event.addDomListener(window, 'load', initiate2);
+
+
+//////////////////// SOUND CLOUD API WIDGET //////////////////////////////
+
+
+var iframeElement   = document.querySelector('iframe');
+var iframeElementID = iframeElement.id;
+var widget1         = SC.Widget(iframeElement);
+var widget2         = SC.Widget(iframeElementID);
+
+SC.initialize({
+  client_id: 'YOUR_CLIENT_ID'
+  });
+
+  var track_url = 'http://soundcloud.com/forss/flickermood';
+  SC.oEmbed(track_url, { auto_play: true }).then(function(oEmbed) {
+  console.log('oEmbed response: ', oEmbed);
+  });
+
+(function(){
+  var widgetIframe = document.getElementById('sc-widget'),
+      widget       = SC.Widget(widgetIframe),
+      newSoundUrl = 'http://api.soundcloud.com/tracks/160781157';
+
+    widget.bind(SC.Widget.Events.READY, function() {
+    // load new widget
+    widget.bind(SC.Widget.Events.FINISH, function() {
+      widget.load(newSoundUrl, {
+        show_artwork: false
+      });
+    });
+  });
+
+}());
 
 /////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
 $(".profile-completion-button").on("click", function(event) {
@@ -202,6 +236,33 @@ $("#finish-user-info-button").on("click", function(event) {
     console.error("Error writing document: ", error);
   });
 });    
+
+///////////////// Scoring System ////////////////////
+
+// Score function 
+
+function score () {
+  // score ++ for each match on availability (eg +1 for Week Day Mornings, +1 for Weekend Afternoon)
+  // score ++ for goal match ; 
+  // return score 
+}
+
+
+function matchGenerator (){
+  // if statement Location === location ;
+  // if statement Gender Preference === Gender Preference ;
+  // if score > 2 ;
+  
+  // Run function Score 
+
+// else not a match 
+
+}
+
+function displayMatch () {
+// display 3 matches with highest score 
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

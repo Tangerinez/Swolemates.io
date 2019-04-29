@@ -19,12 +19,6 @@
     background-size: cover;
 }
 
-.card {
-    margin: 0 auto; /* Added */
-    float: none; /* Added */
-    margin-bottom: 10px; /* Added */
-    margin-top: 3%;
-}
 
 #login {
     text-align: center;
@@ -37,17 +31,11 @@
 }
 
 .containerMatch {
-    padding: 250px;
+    padding-bottom: 250px;
 }
 
 #matches-info {
     font-size: 15px;
-}
-
-.card-img-top {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 #swolemate-matches {
@@ -74,10 +62,54 @@
     margin-top: 3%;
 }
 
+/* potential match cards profile image*/
+.profile-card-pic {
+    max-width: 400px;
+    width: 100%; 
+    height: 90%;
+    max-height: 350px;
+    margin: 20px;
+    padding: 10px;
+    object-fit: cover;
+} 
+
+/* potential match profile cards  */
+.card {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+    margin-top: 3%;
+    width: 80%;
+    max-width: 700px;
+    height: 30%;
+    border: 4px solid #ff6f61;
+    border-radius: 10px;
+}
+
+/* div of buttons on potential match profile cards */
+.choice-buttons {
+    padding: 10px;
+    margin: 10px;
+}
+
+/* individual like/dislike buttons within above div */
+.choice-button {
+    margin: 10px;  
+}
+
+.choice-button:hover {
+    border: 1px solid #4286f4;
+}
+
 .card-content {
     background-color: #ffffff;
     background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
 }
+
+/* text on potential match profile cards */
+ /* .potential-details {
+    margin-top: 50px;
+} */
 
 .wrong-password-text {
     color: red !important;

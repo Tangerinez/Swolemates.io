@@ -86,6 +86,12 @@
     border-radius: 10px;
 }
 
+/* cause the cards to fade when the dislike button on potential match card clicked */
+.card-fade {
+    opacity: 0.6;
+    background-color: #b1b5bc;
+}
+
 /* div of buttons on potential match profile cards */
 .choice-buttons {
     padding: 10px;

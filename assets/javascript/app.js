@@ -16,9 +16,20 @@
 
   ///////////// GLOBAL VARIABLES /////////////////
 
-  var userUsername = "";
-  var userPassword = "";
+  var cachedUserUsername = "";
+  var cachedUserPassword = "";
+  var cachedFitnessGoal = "";
+  var cachedSwolemateGender = "";
+  var cachedUserPreferenceLocation = "";
 
+
+  /////////////////////////////////////////////////////////////
+  /*
+  $("#sign-up-button").on("click", function(event) {
+
+    $(".existing-username-text").empty();
+  });
+  */
 
   ///////////// ON-CLICK function for transferring user's username and password into FireStore ////////////
   $(".get-started-button").on("click", function(event) {
@@ -32,7 +43,7 @@
   var availableUserName = "";
   var existingUsernameCount = 0;
 
-  var docRef = db.collection("userLoginInfo").get().then(function(querySnapshot) {
+  var docRef = db.collection("userInformation").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
       if (existingUsernameArray.includes(doc.data().username) === false) {
       existingUsernameArray.push(doc.data().username);     // pushes every username that is added from FireStore into an existing Username Array
@@ -65,11 +76,11 @@
     };
   */
     
-
   
+
   // CHECKS IF THE "PASSWORD" ENTERED MATCHES THE "CONFIRM PASSWORD" ENTERED
    if (password === confirmPassword) {
-    db.collection("userLoginInfo").doc().set({
+    db.collection("userInformation").doc().set({
       username: username,
       password: password,
     })
@@ -92,14 +103,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF USERNAME AND PASSWORD ARE CORRECT ///////////////
-$(".sign-in-button").on("click", function() {
+$(".sign-in-button").on("click", function(event) {
+  event.preventDefault();
   var loginUsername = $("#login-username").val();              // user's username input
   var loginPassword = $("#login-password").val();             // user's password input
   var existingUsernames = [];
   var existingPasswords = [];
   var matchingUserInfoCount = 0;
 
-  var loginInfoCheck = db.collection("userLoginInfo").get().then(function(querySnapshot) {
+  var loginInfoCheck = db.collection("userInformation").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
       existingUsernames.push(doc.data().username);
       existingPasswords.push(doc.data().password);
@@ -147,7 +159,7 @@ google.maps.event.addDomListener(window, 'load', initiate2);
 
 //////////////////// SOUND CLOUD API WIDGET //////////////////////////////
 
-
+/*
 var iframeElement   = document.querySelector('iframe');
 var iframeElementID = iframeElement.id;
 var widget1         = SC.Widget(iframeElement);
@@ -177,11 +189,9 @@ SC.initialize({
   });
 
 }());
-
+*/
 /////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
-$(".profile-completion-button").on("click", function(event) {
-
-  event.preventDefault();
+$(".profile-completion-button").on("click", function() {
 
 
   var gender = $("#gender").val();             // user's gender input
@@ -193,7 +203,7 @@ $(".profile-completion-button").on("click", function(event) {
   var profileBlurb = $("#why-swole").val();           // user's profile blurb input
   var profilePicture = $("#photo-input").val();
 
-  db.collection("userProfileInfo").doc().set({
+  db.collection("userInformation").doc().update({
     gender: gender,
     userLocation: userLocation,
     age: age,
@@ -214,20 +224,20 @@ $(".profile-completion-button").on("click", function(event) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
-$("#finish-user-info-button").on("click", function(event) {
-
-  event.preventDefault();
-
+$("#finish-user-info-button").on("click", function() {
+  
   var preferenceLocation = $("#user-preference-location").val();           // user's location preference input
   var userAvailability = $("#user-availability").val();             // user's age input
   var fitnessGoals = $("#fitness-goal").val();            // user's weight input
   var swolemateGender = $("#gender-preference").val();             // user's activity level input
 
-  db.collection("userPreferencesInfo").doc().set({
+
+  db.collection("userInformation").doc().update({
     userPreferenceLocation: preferenceLocation,
     userAvailability: userAvailability,
     fitnessGoals: fitnessGoals,
-    swolemateGender: swolemateGender
+    swolemateGender: swolemateGender,
+    userScore: 0
   })
   .then(function() {
     console.log("Document successfully written!");
@@ -235,20 +245,46 @@ $("#finish-user-info-button").on("click", function(event) {
   .catch(function(error) {
     console.error("Error writing document: ", error);
   });
+  cachedFitnessGoal += fitnessGoals;
+  cachedSwolemateGender += swolemateGender;
+  cachedUserPreferenceLocation += preferenceLocation;
 });    
+
+
+
+
+
 
 ///////////////// Scoring System ////////////////////
 
 // Score function 
+function score() {
 
-function score () {
+  var docRef = db.collection("userPreferencesInfo").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+    if (doc.data().fitnessGoals === cachedFitnessGoal) {
+      doc.data().userScore++;
+    };
+    });
+  });
+  console.log(docRef);
   // score ++ for each match on availability (eg +1 for Week Day Mornings, +1 for Weekend Afternoon)
   // score ++ for goal match ; 
   // return score 
-}
+};
 
 
 function matchGenerator (){
+  var docRef = db.collection("userPreferencesInfo").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+    if (((doc.data().swolemateGender === cachedSwolemateGender) && (doc.data().userPreferenceLocation === cachedUserPreferenceLocation)) || doc.data().userScore > 2) {
+      // Generate the card code here
+    } else {
+      // Not a match code here
+    };
+    });
+  });
+  console.log(docRef);
   // if statement Location === location ;
   // if statement Gender Preference === Gender Preference ;
   // if score > 2 ;

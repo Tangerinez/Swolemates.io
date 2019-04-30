@@ -145,7 +145,7 @@ $(document).ready(function() {
         $(currentMatchBtn).attr("id", "show-matches-2");
         $(currentMatchBtn).text("Go to Current Matches");
         $(".containerMatch").append(currentMatchBtn);
-    };
+    });
 
     
 
@@ -345,6 +345,7 @@ $(document).ready(function() {
 
 
     // ---------------------EVENT LISTENER FOR CLICKING muscle (like) button on a potential match-------------------
+
     //  Click the like muscle button on the card --> 
         // user is added to your (current user/viewer's) like array
         // like/dislike buttons on card become unclickable
@@ -374,6 +375,16 @@ $(document).ready(function() {
                 $(currentDislikeBtn).css("pointer-events", "none");
             };
             
+
+    // $(".containerMatch").on('click', function(e) {
+    //     if (e.target && e.target.matches("i.em-muscle")) {
+            // push the user object whose data populates this card into the currentLikes array
+    //     }
+    // })
+        // ISSUE: 
+            // may have to change the code so that only one match is reviewed at a time
+};
+
 
         })
     

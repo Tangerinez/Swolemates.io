@@ -9,6 +9,9 @@ $(document).ready(function() {
     // array for people you like as a user (which you don't see, but which is used to calculate potential matches for the liked user)
     var currentLikes = [];
 
+    // array for people you dislike as a user (which you don't see, but which is used to calculate potential matches for you moving forward)
+    var currentDislikes = [];
+
      // ---------------------EVENT LISTENERs FOR SEEING POTENTIAL MATCHES (FUNCTION DECLARED BELOW)-------------------
         // from button on page after sign in/sign up
         // and for dynamically created button on current match page
@@ -17,7 +20,7 @@ $(document).ready(function() {
         if (e.target && e.target.id === "get-matched-2") {
             seePotentialMatches();
         }
-    })
+    });
         // 2nd listener works but takes you to the bottom of the page...
 
     // ---------------------EVENT LISTENERs FOR SEEING POTENTIAL MATCHES (FUNCTION DECLARED BELOW)-------------------
@@ -26,7 +29,7 @@ $(document).ready(function() {
         if (e.target && e.target.id=== "show-matches-2") {
             seeCurrentMatches();
         }
-    })
+    });
         // // 2nd listener works but takes you to the bottom of the page...
 
 
@@ -38,7 +41,7 @@ $(document).ready(function() {
     function seePotentialMatches() {
 
 
-    $("#get-matched").on("click", function() {
+        // $("#get-matched").on("click", function() {
             
 
         // Logic for matching users runs
@@ -68,6 +71,8 @@ $(document).ready(function() {
             // create a div that is a card
             var cardDiv = $("<div>");
             $(cardDiv).addClass("card");
+            $(cardDiv).attr("id", "card-" + i);
+            $(cardDiv).attr("data-clickable", true);
 
             // create a  div row to house potential's pic, name, & age;
                 // append to card
@@ -105,11 +110,13 @@ $(document).ready(function() {
             // create a  div for the buttons
             var choiceButtons = $("<div>").addClass("choice-buttons");
             // create like and dislike buttons
-            var likeButton = $("<button>").addClass("btn btn-light choice-button");
+            var likeButton = $("<button>").addClass("btn btn-light like-choice-button");
+            $(likeButton).attr("data-like", i);
             // .html("<button><i class='em em-heart_decoration'</i></button>");
             var emojiLike = $("<i>").addClass("em em-muscle");
             $(likeButton).append(emojiLike);
-            var dislikeButton = $("<button>").addClass("btn btn-light choice-button");
+            var dislikeButton = $("<button>").addClass("btn btn-light dislike-choice-button");
+            $(dislikeButton).attr("data-dislike", i);
             var emojiDislike = $("<i>").addClass("em em-x");
             $(dislikeButton).append(emojiDislike);
             // append those buttons to the div
@@ -253,7 +260,7 @@ $(document).ready(function() {
                 var goal = $("<li>");
                 goal.text(currentMatch.fitnessGoals[j]);
                 goalsList.append(goal);
-            }
+            };
             $(matchGoals).append(goalsList);
             $(matchDetailsContent2).append(matchGoals);
 
@@ -291,7 +298,7 @@ $(document).ready(function() {
 
             $(".containerMatch").append(cardDiv);
 
-        };
+    };
 
         // button currently lacks functionality
         var potentialMatchBtn = $("<button>").addClass("btn btn-primary btn-lg btn-block"); 
@@ -300,17 +307,75 @@ $(document).ready(function() {
         $(".containerMatch").append(potentialMatchBtn);
     };
 
+
     // ---------------------EVENT LISTENER FOR CLICKING x button on a potential match-------------------
-    // $(".containerMatch").on('click', function(e) {
-    //     if (e.target && e.target.matches("i.em-x")) {
-    //         $(this).closest("div.card").addClass("fade");
-    //     }
-    // })
-        // ISSUE: 
-            // may have to change the code so that only one match is reviewed at a time
-            // currently, this listener makes the whole page fade after the x button is clicked
+        // Click the x button on the card --> the card greys and fades
+            // the user is added to your (current user/viewer's) dislike array
+            // like/dislike buttons on card become unclickable
+        $(document.body).on("click", ".dislike-choice-button", function() {
+            
+                // establishing which card we're working on
+            var cardNumber = $(this).attr("data-dislike");
+                    // FOR TESTING console.log(cardNumber);
+            var currentCard = $("#card-" + cardNumber);
+
+                // making the card gray out and lose opacity when the dislike button clicked
+            $(currentCard).addClass("card-fade");
+                // pushing the user whose dislike button was clicked into a dislike array
+            currentDislikes.push(currentPotentials[cardNumber]);
+                    // FOR TESTING OF DISLIKE ARRAY
+                    console.log("disliked people:")
+                    console.log(currentDislikes);
+                
+                // setting a self-created status to render the button unclickable
+            var dislikeBtnStatus = $(this).attr("data-clickable", "false");
+                // if the button is unclickable according to line just above
+            if (dislikeBtnStatus.attr("data-clickable") === "false") {
+                    // actually cause button to lose functionality in code
+                $(this).css("pointer-events", "none");
+                    // grab the like button on the current card
+                var currentLikeBtn = $("button[data-like=" + cardNumber + "]");
+                        // FOR TESTING
+                        // console.log(currentLikeBtn);
+                    // causing like button on the card to lose functionality
+                $(currentLikeBtn).css("pointer-events", "none");
+            };
+
+        });
+
 
     // ---------------------EVENT LISTENER FOR CLICKING muscle (like) button on a potential match-------------------
+
+    //  Click the like muscle button on the card --> 
+        // user is added to your (current user/viewer's) like array
+        // like/dislike buttons on card become unclickable
+        $(document.body).on("click", ".like-choice-button", function() {
+
+                // establishing which card we're working on
+            var personNumber = $(this).attr("data-like");
+                // FOR TESTING console.log(personNumber);
+                // JUST IN CASE var currentCard = $("#card-" + personNumber);
+                // console.log(currentCard);
+
+                // pushing the user whose like button was clicked into a like array
+            currentLikes.push(currentPotentials[personNumber]);
+                    // FOR TESTING OF LIKE ARRAY
+                    console.log("liked people:")
+                    console.log(currentLikes);
+                
+                //setting a self-created status to render the button unclickable 
+            var likeBtnStatus = $(this).attr("data-clickable", "false");
+                // if the button is unclickable according to line just above
+            if (likeBtnStatus.attr("data-clickable") === "false") {
+                    // actually cause button to lose functionality in code 
+                $(this).css("pointer-events", "none");
+                    // grab the dislike button on the current card
+                var currentDislikeBtn = $("button[data-dislike=" + personNumber + "]");
+                    // causing the dislike button on the card to lose functionality
+                $(currentDislikeBtn).css("pointer-events", "none");
+            };
+            
+
     // $(".containerMatch").on('click', function(e) {
     //     if (e.target && e.target.matches("i.em-muscle")) {
             // push the user object whose data populates this card into the currentLikes array
@@ -320,6 +385,10 @@ $(document).ready(function() {
             // may have to change the code so that only one match is reviewed at a time
 };
 
+
+        })
+    
+});
 
 
 

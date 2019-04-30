@@ -106,6 +106,16 @@
     background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
 }
 
+.age-header, .gender-header, .location-header,
+.weight-header, .activity-header, .experience-header,
+.goal-header, .availability-header, .blurb-header {
+    font-weight: 500;
+}
+
+/* .profile-heart {
+    
+} */
+
 /* text on potential match profile cards */
  /* .potential-details {
     margin-top: 50px;
@@ -141,21 +151,24 @@
     margin-top: 2em;
 }
 
-#get-matched {
+#get-matched, #get-matched-2 {
     background-color: #ff6f61;
     font-weight: bold;
     border: none;
     margin-top: 2em;
 }
 
-#show-matches {
+#show-matches, #show-matches-2 {
     background-color: #ff6f61;
     font-weight: bold;
     border: none;
     margin-top: 2em;
 }
 
-#sign-up-button:hover, #login-button:hover, #get-matched:hover, #show-matches:hover {
+
+
+#sign-up-button:hover, #login-button:hover, #get-matched:hover, 
+#show-matches:hover, #show-matches-2:hover, #get-matched-2:hover {
   box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);

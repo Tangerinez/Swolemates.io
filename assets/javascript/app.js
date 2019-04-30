@@ -30,76 +30,130 @@
     $(".existing-username-text").empty();
   });
   */
-
   ///////////// ON-CLICK function for transferring user's username and password into FireStore ////////////
   $(".get-started-button").on("click", function(event) {
   
-  event.preventDefault();
-  
-  var username = $("#input-username").val();              // user's username input
-  var password = $("#input-password").val();             // user's password input
-  var confirmPassword = $("#input-confirmPassword").val();               // user's Confirm Password input
-  var existingUsernameArray = [];
-  var availableUserName = "";
-  var existingUsernameCount = 0;
+    event.preventDefault();
 
-  var docRef = db.collection("userInformation").get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
-      if (existingUsernameArray.includes(doc.data().username) === false) {
-      existingUsernameArray.push(doc.data().username);     // pushes every username that is added from FireStore into an existing Username Array
-      };
-    });
-    console.log(existingUsernameArray);
-    if (existingUsernameArray.includes(username) === true) {        // NEED TO FIX - KEEPS APPENDING EVEN FOR NON-EXISTING USERNAMES!
+    var userObjectInformation = {};
+    var username = $("#input-username").val();              // user's username input
+    var password = $("#input-password").val();             // user's password input
+    var confirmPassword = $("#input-confirmPassword").val();               // user's Confirm Password input
+    var existingUsernameArray = [];        // Array of user's existing usernames
+
+  
+    db.collection("existingUsernames").doc().set({          // Creating a collection for existing usernames
+      existingUsernames: username
+      })
+      .then(function() {
+      console.log("Document successfully written!");
+      })
+      .catch(function(error) {
+      console.error("Error writing document: ", error);
+      });
+  
+    db.collection("existingUsernames").get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        existingUsernameArray.push(doc.data().existingUsernames);            // Putting all existing usernames in an array
+      });
+      console.log(existingUsernameArray);
+    });  
+    
+    
+    if ((existingUsernameArray.includes(username) === false) && (password === confirmPassword)) {    // pushes unused usernames into the userObjectInformation object
+      userObjectInformation.username = username;
+      userObjectInformation.password = password;
+    } else if ((existingUsernameArray.includes(doc.data().userObjectInformation.username) === true) && (password !== confirmPassword)) {         // if there is already matching username AND passwords do not match
       var wrongUsernameContainer = $("<small>");
       wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
       wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
       $(".username-input-form").append(wrongUsernameContainer);
+      var wrongPasswordContainer = $("<small>");
+      wrongPasswordContainer.addClass("form-text text-muted wrong-password-text");
+      wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
+      $(".form-confirm-password").append(wrongPasswordContainer);
+      // prevent onclick for modal
+    } else if (existingUsernameArray.includes(doc.data().userObjectInformation.username) === true) {     // if username already exists
+      var wrongUsernameContainer = $("<small>");
+      wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
+      wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
+      $(".username-input-form").append(wrongUsernameContainer);
+      // prevent onclick for modal
+    } else if (password !== confirmPassword) {       // if passwords don't match
+      var wrongPasswordContainer = $("<small>");
+      wrongPasswordContainer.addClass("form-text text-muted wrong-password-text");
+      wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
+      $(".form-confirm-password").append(wrongPasswordContainer);
+      // prevent onclick for modal
       };
-  });
-  console.log(docRef);
-
-  // CHECKS IF THE USERNAME ENTERED IS ALREADY TAKEN 
-  /*
-  for (var i = 0; i<existingUsernameArray.length; i++) {
-   if (existingUsernameArray[i] === username) {        // if user's username input is already equal to an existing username
-    existingUsernameCount += 1;
-   };
-  };
-  console.log(existingUsernameArray);
-  console.log(existingUsernameCount);    
-   if (existingUsernameCount > 0) {
-    var wrongUsernameContainer = $("<small>");
-    wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
-    wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
-    $(".username-input-form").append(wrongUsernameContainer);
-    };
-  */
-    
   
 
-  // CHECKS IF THE "PASSWORD" ENTERED MATCHES THE "CONFIRM PASSWORD" ENTERED
-   if (password === confirmPassword) {
-    db.collection("userInformation").doc().set({
-      username: username,
-      password: password,
-    })
-    .then(function() {
-      console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-      console.error("Error writing document: ", error);
+    
+  $(".profile-completion-button").on("click", function() {     // ON-CLICK FUNCTION FOR PROFILE BUTTON AFTER SIGN-UP MODAL CONDITION IS MET
+    var userGender = $("#gender").val();             // user's gender input
+    var userLocation = $("#location").val();           // user's location input
+    var userAge = $("#age").val();             // user's age input
+    var userWeight = $("#weight").val();            // user's weight input
+    var userActivityLevel = $("#activity").val();             // user's activity level input
+    var userExperienceLevel = $("#experience").val();             // user's experience level input
+    var userProfileBlurb = $("#why-swole").val();           // user's profile blurb input
+    var userProfilePicture = $("#photo-input").val();      // profile-picture file path
+    var userProfileArray = [];
+
+    userProfileArray.push(userGender);              // pushing all the user's profile information into an array
+    userProfileArray.push(userLocation);
+    userProfileArray.push(userAge);
+    userProfileArray.push(userWeight);
+    userProfileArray.push(userActivityLevel);
+    userProfileArray.push(userExperienceLevel);
+    userProfileArray.push(userProfileBlurb);
+    userProfileArray.push(userProfilePicture);
+
+    userObjectInformation.userProfileInformation = userProfileArray;          // pushing the array into the user information object
+    console.log('2nd page ',userObjectInformation);
+
+
+    $("#finish-user-info-button").on("click", function() { 
+      console.log("user profile array", userProfileArray);
+
+      event.preventDefault();     // ON-CLICK FUNCTION FOR PREFERENCES BUTTON AFTER PROFILE INPUT MODAL
+      var userPreferenceLocation = $("#user-preference-location").val();           // user's location preference input
+      var userAvailability = $("#user-availability").val();             // user's age input
+      var userFitnessGoals = $("#fitness-goal").val();            // user's weight input
+      var userSwolemateGender = $("#gender-preference").val();             // user's activity level input
+      
+      /*
+      userPreferencesArray.push(userPreferenceLocation);       // pushing user's preferences into a new array
+      userPreferencesArray.push(userAvailability);
+      userPreferencesArray.push(userFitnessGoals);
+      userPreferencesArray.push(userSwolemateGender);
+      */
+      
+      userObjectInformation.userPreferenceLocation = userPreferenceLocation;        // pushing the user preferences array into user profile array (array within array)
+      userObjectInformation.userAvailability = userAvailability;
+      userObjectInformation.userFitnessGoals = userFitnessGoals;
+      userObjectInformation.userSwolemateGender = userSwolemateGender;
+      console.log('3rd page ',userObjectInformation);
+      
+      
+      db.collection("allUserInformation").doc().set({          // Creating the collection database and storing the user's Object information in Firestore
+        userObjectInformation: userObjectInformation
+        })
+        .then(function() {
+        console.log("Document successfully written!");
+        })
+        .catch(function(error) {
+        console.error("Error writing document: ", error);
+        });
+        window.location.href = "MatchMe.html";
+      });
     });
-  } else {
-    var wrongPasswordContainer = $("<small>");
-    wrongPasswordContainer.addClass("form-text text-muted wrong-password-text");
-    wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
-    $(".form-confirm-password").append(wrongPasswordContainer);
-  };
-  $("#input-username").val("");
-  $("#input-password").val("");
-  $("#input-confirmPassword").val("");
-});
+  });
+
+
+  
+  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF USERNAME AND PASSWORD ARE CORRECT ///////////////
@@ -109,51 +163,42 @@ $(".sign-in-button").on("click", function(event) {
   var loginPassword = $("#login-password").val();             // user's password input
   var existingUsernames = [];
   var existingPasswords = [];
-  var matchingUserInfoCount = 0;
 
-  var loginInfoCheck = db.collection("userInformation").get().then(function(querySnapshot) {
+  db.collection("allUserInformation").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
-      existingUsernames.push(doc.data().username);
-      existingPasswords.push(doc.data().password);
-      if ((doc.data().username === loginUsername) && doc.data().password === loginPassword) {          // CHECKS IF USERNAME AND PASSWORD ARE CORRECT
+      existingUsernames.push(doc.data().userObjectInformation.username);
+      existingPasswords.push(doc.data().userObjectInformation.password);
+      if ((doc.data().userObjectInformation.username === loginUsername) && (doc.data().userObjectInformation.password === loginPassword)) {          // If username and password match an existing one...
         window.location.href = "MatchMe.html";
-        userUsername = loginUsername;
-        userPassword = loginPassword;
-      }
-    });
-    for (var i = 0; i<existingUsernames.length; i++) {               // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT
-      if ((existingUsernames[i] === loginUsername) && existingPasswords[i] === loginPassword) {       
-        matchingUserInfoCount += 1;
       };
-    };
-      if (matchingUserInfoCount !== 1) {
+    });
+    for (var i = 0; i<existingUsernames.length; i++) {
+      if (!((existingUsernames[i] === loginUsername) && (existingPasswords === loginPassword))) {        // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT     
         var loginErrorContainer = $("<small>");
         loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
         loginErrorContainer.text("Your username and/or password information are incorrect. Please try again.");
         $(".user-login-password-container").append(loginErrorContainer); 
       };
+    };
   });
-console.log(loginInfoCheck);
 $("#login-username").val(""); 
 $("#login-password").val(""); 
 });
 
-
-
-/////////////////// Google maps API Request -- Autocomplete ////////////////////////
+////////////////// Google maps API Request -- Autocomplete ////////////////////////
 // location profile request 
 function initiate() {
   var input = document.getElementById('location');
   var autocomplete = new google.maps.places.Autocomplete(input);
-  console.log("i worked");
-}
+  console.log("api worked");
+};
 google.maps.event.addDomListener(window, 'load', initiate);
 //location preferences request 
 
 function initiate2() {
   var inputUser = document.getElementById('user-preference-location');
   var autocomplete = new google.maps.places.Autocomplete(inputUser);
-}
+};
 google.maps.event.addDomListener(window, 'load', initiate2);
 
 
@@ -191,109 +236,25 @@ SC.initialize({
 }());
 */
 /////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
-$(".profile-completion-button").on("click", function() {
-
-
-  var gender = $("#gender").val();             // user's gender input
-  var userLocation = $("#location").val();           // user's location input
-  var age = $("#age").val();             // user's age input
-  var weight = $("#weight").val();            // user's weight input
-  var activityLevel = $("#activity").val();             // user's activity level input
-  var experienceLevel = $("#experience").val();             // user's experience level input
-  var profileBlurb = $("#why-swole").val();           // user's profile blurb input
-  var profilePicture = $("#photo-input").val();
-
-  db.collection("userInformation").doc().update({
-    gender: gender,
-    userLocation: userLocation,
-    age: age,
-    weight: weight,
-    activityLevel: activityLevel,
-    experienceLevel: experienceLevel,
-    profileBlurb: profileBlurb,
-    profilePicture: profilePicture
-  })
-  .then(function() {
-    console.log("Document successfully written!");
-  })
-  .catch(function(error) {
-    console.error("Error writing document: ", error);
-  });
-});           
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
-$("#finish-user-info-button").on("click", function() {
-  
-  var preferenceLocation = $("#user-preference-location").val();           // user's location preference input
-  var userAvailability = $("#user-availability").val();             // user's age input
-  var fitnessGoals = $("#fitness-goal").val();            // user's weight input
-  var swolemateGender = $("#gender-preference").val();             // user's activity level input
-
-
-  db.collection("userInformation").doc().update({
-    userPreferenceLocation: preferenceLocation,
-    userAvailability: userAvailability,
-    fitnessGoals: fitnessGoals,
-    swolemateGender: swolemateGender,
-    userScore: 0
-  })
-  .then(function() {
-    console.log("Document successfully written!");
-  })
-  .catch(function(error) {
-    console.error("Error writing document: ", error);
-  });
-  cachedFitnessGoal += fitnessGoals;
-  cachedSwolemateGender += swolemateGender;
-  cachedUserPreferenceLocation += preferenceLocation;
-});    
-
-
-
-
-
+ 
 
 ///////////////// Scoring System ////////////////////
-
-// Score function 
-function score() {
-
-<<<<<<< HEAD
-  var docRef = db.collection("userPreferencesInfo").get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
-    if (doc.data().fitnessGoals === cachedFitnessGoal) {
-      doc.data().userScore++;
-    };
-    });
-  });
-  console.log(docRef);
-  // score ++ for each match on availability (eg +1 for Week Day Mornings, +1 for Weekend Afternoon)
-  // score ++ for goal match ; 
-  // return score 
+/*
+function matchGenerator() {
+  
 };
+*/
 
-
-function matchGenerator (){
-  var docRef = db.collection("userPreferencesInfo").get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
-    if (((doc.data().swolemateGender === cachedSwolemateGender) && (doc.data().userPreferenceLocation === cachedUserPreferenceLocation)) || doc.data().userScore > 2) {
-      // Generate the card code here
-    } else {
-      // Not a match code here
-    };
-    });
-  });
-  console.log(docRef);
   // if statement Location === location ;
   // if statement Gender Preference === Gender Preference ;
   // if score > 2 ;
   
   // Run function Score 
 
-=======
-// availibility will be dynamically appended into the array based on query selection, the array will be compared to stored arrays in firebase
+// availability will be dynamically appended into the array based on query selection, the array will be compared to stored arrays in firebase
+/*
 var matches = [ 
  {name: score},
 ];
@@ -324,7 +285,6 @@ function matchGenerator (){
     && score >=2 ) {
       //match goes to firebase 
     } 
->>>>>>> 8f2db9ab247420011d9dd6a4cd49d910781234ff
 // else not a match 
   else {
     //not a match 
@@ -347,7 +307,7 @@ function displayMatch () {
 $(".card").append()
 
 }
-
+*/
 
 
 
@@ -383,8 +343,7 @@ Dynamic Elements
     - Current Matches page: Generate a different dynamically-created card Object for this page, since the card will look different than the one on the Potential Matches page. Append subsequent cards below each other.
 
 OTHER
-- On-click event on the cards for elements that link to social media, etc.
+- On-click event on the cards for elements that link to social media, etc
 */
   
   
-

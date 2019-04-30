@@ -34,7 +34,12 @@ $(document).ready(function() {
         // assumes that modals have been cleared and we land on page to see:
             // 1. <button>Match Me!</button>
             // 2. <button>Current Matches</button>
+
     function seePotentialMatches() {
+
+
+    $("#get-matched").on("click", function() {
+            
 
         // Logic for matching users runs
             // wh/ results in currentPotentials getting filled

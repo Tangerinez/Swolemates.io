@@ -192,3 +192,6 @@
     overflow-y: auto;
 }
 
+.card {
+    max-width: 400px;
+}

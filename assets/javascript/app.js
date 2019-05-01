@@ -16,12 +16,9 @@
 
   ///////////// GLOBAL VARIABLES /////////////////
 
-  var cachedUserUsername = "";
-  var cachedUserPassword = "";
-  var cachedFitnessGoal = "";
-  var cachedSwolemateGender = "";
-  var cachedUserPreferenceLocation = "";
-
+  var currentUserPreferencesArray = [];   // cached userPreferencesInfo  -------> [0,1,2,3]
+  
+  // 0 - location, 1 - availability, 2 - fitness goals, 3 - gender
 
   /////////////////////////////////////////////////////////////
   /*
@@ -118,17 +115,15 @@
 
       event.preventDefault();     // ON-CLICK FUNCTION FOR PREFERENCES BUTTON AFTER PROFILE INPUT MODAL
       var userPreferenceLocation = $("#user-preference-location").val();           // user's location preference input
-      var userAvailability = $("#user-availability").val();             // user's age input
+      var userAvailability = $("#user-availability:checked").val();             // user's age input
       var userFitnessGoals = $("#fitness-goal").val();            // user's weight input
       var userSwolemateGender = $("#gender-preference").val();             // user's activity level input
       
-      /*
-      userPreferencesArray.push(userPreferenceLocation);       // pushing user's preferences into a new array
-      userPreferencesArray.push(userAvailability);
-      userPreferencesArray.push(userFitnessGoals);
-      userPreferencesArray.push(userSwolemateGender);
-      */
-      
+      currentUserPreferencesArray.push(userPreferenceLocation);     // caches current user preference as 0 index of array
+      /* currentUserPreferencesArray.push(userAvailability); */          // caches current user preference as 1 index of array
+      currentUserPreferencesArray.push(userFitnessGoals);       // caches current user fitness goals as 2 index of array
+      currentUserPreferencesArray.push(userSwolemateGender);      // caches current user swolemate gender preference as 3 index of array
+
       userObjectInformation.userPreferenceLocation = userPreferenceLocation;        // pushing the user preferences array into user profile array (array within array)
       userObjectInformation.userAvailability = userAvailability;
       userObjectInformation.userFitnessGoals = userFitnessGoals;
@@ -235,84 +230,83 @@ SC.initialize({
 
 }());
 */
-/////////////// ON-CLICK for "Next" button after the user enters in their profile information //////////////
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
-
-///////////////// Scoring System ////////////////////
-/*
-function matchGenerator() {
-  
+/////////////// Function for shuffling elements in an array //////////////
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  };
+  return array;
 };
-*/
 
-  // if statement Location === location ;
-  // if statement Gender Preference === Gender Preference ;
-  // if score > 2 ;
-  
-  // Run function Score 
 
-// availability will be dynamically appended into the array based on query selection, the array will be compared to stored arrays in firebase
+////////////////////////////////////   BEGINNING CODE FOR MATCHING SYSTEM   //////////////////////////////////
+
+var cardCount = 0;             // number of cards generated
+var otherUsersPreferencesArray = [];        // each index of this array will have an array of another user's preferences
+
+///////////////// Match Card Generator Function that will go inside "Match Me" ON-CLICK ////////////////////
+function createCardByMatching() {
+
+  db.collection("allUserInformation").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      var eachUsersPreferences = [];
+      eachUsersPreferences.push(doc.data().userObjectInformation.userPreferenceLocation);      // 0 index
+      /* eachUsersPreferences.push(doc.data().userObjectInformation.userAvailability);    */    // 1 index 
+      eachUsersPreferences.push(doc.data().userObjectInformation.userFitnessGoals);        // 2 index
+      eachUsersPreferences.push(doc.data().userObjectInformation.userSwoleMateGender);      // 3 index
+
+      otherUsersPreferencesArray.push(eachUsersPreferences);      // [[0,1,2,3],[0,1,2,3],[0,1,2,3]]
+    });
+  });
+  shuffle(otherUsersPreferencesArray);             // randomly jumbles all of the signed up users
+                      
+  for (var i = 0; i<otherUsersPreferencesArray.length; i++) {         // loops through every single user
+    // if all 4 categories match
+    if ((currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] === otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] === otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] === otherUsersPreferencesArray[i][3])) {
+      cardCount++;
+      // INSERT MAKE THE CARD FUNCTION HERE
+    };
+    // if not all cards have been generated, and all preferences match EXCEPT fitness goals
+    if ((cardCount <= 3) && (currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] === otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] !== otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] === otherUsersPreferencesArray[i][3])) {
+      cardCount++;
+      // INSERT MAKE THE CARD FUNCTION HERE
+    };
+    // if not call cards have been generated, and ONLY location and availability match
+    if ((cardCount <= 3) && (currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] === otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] !== otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] !== otherUsersPreferencesArray[i][3])) {
+      cardCount++;
+      // INSERT MAKE THE CARD FUNCTION HERE
+    };
+    // if not all cards have been generated, and ONLY location matches
+    if ((cardCount <=3) && (currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] !== otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] !== otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] !== otherUsersPreferencesArray[i][3])) {
+      // INSERT MAKE THE CARD FUNCTION HERE
+    };
+  };
+  if (cardCount === 0) {
+    // INSERT A DYNAMICALLY CREATED MESSAGE HERE STATING THAT THE USER FOUND NO POTENTIAL MATCHES IN THEIR LOCATION
+  }
+};
+
+
+
 /*
-var matches = [ 
- {name: score},
-];
-var goal = [];
-var availability = [];
-var score = 0;
 
-function score () {
-  for (i=0; i < availability.length; i++);
-  // score ++ for each match on availability (eg +1 for Week Day Mornings, +1 for Weekend Afternoon)
-  if (userAvailability === availability[i]){
-    score ++;
-  };
-  for (i=0; i < goal.length; i++) {
-    if(fitnessGoals === goal[i]); 
-    score ++;
-  }
-  return score; 
-}
+$("#get-matched").on("click", function(event) {
+       // INSERT THE createCardByMatching() function here!
+});
 
 
-function matchGenerator (){
-  //run function score
-  score();
-  // determine if match 
-  if (userPreferenceLocation === preferenceLocation 
-    && swolemateGender === gender 
-    && score >=2 ) {
-      //match goes to firebase 
-    } 
-// else not a match 
-  else {
-    //not a match 
-  }
+$(".like-choice-button").on("click", function(event) {
+       // INSERT a a function here that creates a profile card and appends it to the current match page
+});
 
-}
 
-function scoreMatch() {
-  for (i=0; i < match.length; i++){
-    var matchScore = ""    // some value from firbase created array of matches 
-  
-  };
-}
 
-function displayMatch () {
-// pull from firebase
+$("show-matches").on("click", function(event) {
+      // INSERT a function here goes to current match page
+});
 
-//input card attr to be appended 
-
-$(".card").append()
-
-}
 */
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 /////////// PSEUDOCODE TASKS ///////////

@@ -145,7 +145,7 @@ $(document).ready(function() {
         $(currentMatchBtn).attr("id", "show-matches-2");
         $(currentMatchBtn).text("Go to Current Matches");
         $(".containerMatch").append(currentMatchBtn);
-    });
+    };
 
     
 
@@ -383,12 +383,11 @@ $(document).ready(function() {
     // })
         // ISSUE: 
             // may have to change the code so that only one match is reviewed at a time
-};
-
-
-        })
-    
 });
+
+});
+    
+
 
 
 

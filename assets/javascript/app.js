@@ -13,80 +13,47 @@
   var db = firebase.firestore();
 
 
-
-  ///////////// GLOBAL VARIABLES /////////////////
-
-  var currentUserPreferencesArray = [];   // cached userPreferencesInfo  -------> [0,1,2,3]
-  
-  // 0 - location, 1 - availability, 2 - fitness goals, 3 - gender
-
-  /////////////////////////////////////////////////////////////
-  /*
-  $("#sign-up-button").on("click", function(event) {
-
-    $(".existing-username-text").empty();
-  });
-  */
   ///////////// ON-CLICK function for transferring user's username and password into FireStore ////////////
-  $(".get-started-button").on("click", function(event) {
-  
-    event.preventDefault();
+$(".get-started-button").on("click", function(event) {
+  event.preventDefault();
 
-    var userObjectInformation = {};
-    var username = $("#input-username").val();              // user's username input
-    var password = $("#input-password").val();             // user's password input
-    var confirmPassword = $("#input-confirmPassword").val();               // user's Confirm Password input
-    var existingUsernameArray = [];        // Array of user's existing usernames
+  var userObjectInformation = {};      // { username: username, password: password}
+  var username = $("#input-username").val();              // user's username input
+  var password = $("#input-password").val();             // user's password input
+  var existingUsernameArray = [];        // Array of user's existing usernames
 
-  
-    db.collection("existingUsernames").doc().set({          // Creating a collection for existing usernames
-      existingUsernames: username
-      })
-      .then(function() {
-      console.log("Document successfully written!");
-      })
-      .catch(function(error) {
-      console.error("Error writing document: ", error);
-      });
-  
-    db.collection("existingUsernames").get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-        existingUsernameArray.push(doc.data().existingUsernames);            // Putting all existing usernames in an array
-      });
-      console.log(existingUsernameArray);
-    });  
-    
-    
-    if ((existingUsernameArray.includes(username) === false) && (password === confirmPassword)) {    // pushes unused usernames into the userObjectInformation object
-      userObjectInformation.username = username;
-      userObjectInformation.password = password;
-    } else if ((existingUsernameArray.includes(doc.data().userObjectInformation.username) === true) && (password !== confirmPassword)) {         // if there is already matching username AND passwords do not match
-      var wrongUsernameContainer = $("<small>");
-      wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
-      wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
-      $(".username-input-form").append(wrongUsernameContainer);
-      var wrongPasswordContainer = $("<small>");
-      wrongPasswordContainer.addClass("form-text text-muted wrong-password-text");
-      wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
-      $(".form-confirm-password").append(wrongPasswordContainer);
-      // prevent onclick for modal
-    } else if (existingUsernameArray.includes(doc.data().userObjectInformation.username) === true) {     // if username already exists
-      var wrongUsernameContainer = $("<small>");
-      wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
-      wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
-      $(".username-input-form").append(wrongUsernameContainer);
-      // prevent onclick for modal
-    } else if (password !== confirmPassword) {       // if passwords don't match
-      var wrongPasswordContainer = $("<small>");
-      wrongPasswordContainer.addClass("form-text text-muted wrong-password-text");
-      wrongPasswordContainer.text("Your passwords do not match! Please enter your password again.");
-      $(".form-confirm-password").append(wrongPasswordContainer);
-      // prevent onclick for modal
-      };
-  
+     db.collection("existingUsernames").get().then(function(querySnapshot) {
+       querySnapshot.forEach(function(doc) {
+         existingUsernameArray.push(doc.data().username);            // Putting all existing usernames in an array
+       });
+       if ((existingUsernameArray.includes(username) === false)) {    // if the current list of already existing usernames does NOT include the username that the user typed in...
+         
+        userObjectInformation.username = username;             // pushes un-used usernames into the userObjectInformation object
+        userObjectInformation.password = password;
+         
+         db.collection("existingUsernames").doc().set({          // Adds that un-used username to a usernames doc in firestore
+           username: username
+           })
+           .then(function() {
+           console.log("Document successfully written!");
+           })
+           .catch(function(error) {
+           console.error("Error writing document: ", error);
+           });
+          $('#modal2').modal('hide');
+          $('#modal15').modal('show');
+       } else if ((existingUsernameArray.includes(username) === true)) {         // if there is already an existing username
+         $(".existing-username-text").remove();
+         var wrongUsernameContainer = $("<small>");
+         wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
+         wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
+         $(".username-input-form").append(wrongUsernameContainer);
+       };
+     });  
 
     
   $(".profile-completion-button").on("click", function() {     // ON-CLICK FUNCTION FOR PROFILE BUTTON AFTER SIGN-UP MODAL CONDITION IS MET
+    var userName = $("#name").val();
     var userGender = $("#gender").val();             // user's gender input
     var userLocation = $("#location").val();           // user's location input
     var userAge = $("#age").val();             // user's age input
@@ -97,7 +64,8 @@
     var userProfilePicture = $("#photo-input").val();      // profile-picture file path
     var userProfileArray = [];
 
-    userProfileArray.push(userGender);              // pushing all the user's profile information into an array
+    userProfileArray.push(userName);               // pushing all the user's profile information into an array
+    userProfileArray.push(userGender);             
     userProfileArray.push(userLocation);
     userProfileArray.push(userAge);
     userProfileArray.push(userWeight);
@@ -115,17 +83,14 @@
 
       event.preventDefault();     // ON-CLICK FUNCTION FOR PREFERENCES BUTTON AFTER PROFILE INPUT MODAL
       var userPreferenceLocation = $("#user-preference-location").val();           // user's location preference input
-      var userAvailability = $("#user-availability:checked").val();             // user's age input
+      var userWeekdayAvailability = $("#weekday-availability").val();      //user's weekday availability
+      var userWeekendAvailability = $("#weekend-availability").val();      //user's weekend availability
       var userFitnessGoals = $("#fitness-goal").val();            // user's weight input
       var userSwolemateGender = $("#gender-preference").val();             // user's activity level input
       
-      currentUserPreferencesArray.push(userPreferenceLocation);     // caches current user preference as 0 index of array
-      /* currentUserPreferencesArray.push(userAvailability); */          // caches current user preference as 1 index of array
-      currentUserPreferencesArray.push(userFitnessGoals);       // caches current user fitness goals as 2 index of array
-      currentUserPreferencesArray.push(userSwolemateGender);      // caches current user swolemate gender preference as 3 index of array
-
       userObjectInformation.userPreferenceLocation = userPreferenceLocation;        // pushing the user preferences array into user profile array (array within array)
-      userObjectInformation.userAvailability = userAvailability;
+      userObjectInformation.userWeekdayAvailability = userWeekdayAvailability;
+      userObjectInformation.userWeekendAvailability = userWeekendAvailability;
       userObjectInformation.userFitnessGoals = userFitnessGoals;
       userObjectInformation.userSwolemateGender = userSwolemateGender;
       console.log('3rd page ',userObjectInformation);
@@ -140,45 +105,64 @@
         .catch(function(error) {
         console.error("Error writing document: ", error);
         });
-        window.location.href = "MatchMe.html";
+        // Once user presses the finish button the login modal automatically pops up
       });
     });
   });
 
 
-  
-  
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////// ON-CLICK EVENT FOR LOGIN PAGE - CHECKS FOR IF USERNAME AND PASSWORD ARE CORRECT ///////////////
 $(".sign-in-button").on("click", function(event) {
+  
+  db.collection("currentUsersPreferences").doc("UsZpSo6kUVDWQfh3FdUz").delete().then(function() {
+    console.log("Document successfully deleted!");
+  }).catch(function(error) {
+    console.error("Error removing document: ", error);
+  });
+  
   event.preventDefault();
   var loginUsername = $("#login-username").val();              // user's username input
   var loginPassword = $("#login-password").val();             // user's password input
   var existingUsernames = [];
   var existingPasswords = [];
+  var count = 0;
 
   db.collection("allUserInformation").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
       existingUsernames.push(doc.data().userObjectInformation.username);
       existingPasswords.push(doc.data().userObjectInformation.password);
       if ((doc.data().userObjectInformation.username === loginUsername) && (doc.data().userObjectInformation.password === loginPassword)) {          // If username and password match an existing one...
-        window.location.href = "MatchMe.html";
+        window.location.href = "MatchMe.html"; 
+
+        db.collection("currentUsersPreferences").doc("UsZpSo6kUVDWQfh3FdUz").set({          // Creating the current user's preferences in firestore
+        currentUserPreferenceLocation: doc.data().userObjectInformation.userPreferenceLocation,
+        currentUserFitnessGoals: doc.data().userObjectInformation.userFitnessGoals,
+        currentUserSwolemateGender: doc.data().userObjectInformation.userSwolemateGender,
+        currentUserWeekdayAvailability: doc.data().userObjectInformation.userWeekdayAvailability,
+        currentUserWeekendAvailability: doc.data().userObjectInformation.userWeekendAvailability
+        });
       };
     });
+
     for (var i = 0; i<existingUsernames.length; i++) {
-      if (!((existingUsernames[i] === loginUsername) && (existingPasswords === loginPassword))) {        // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT     
-        var loginErrorContainer = $("<small>");
-        loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
-        loginErrorContainer.text("Your username and/or password information are incorrect. Please try again.");
-        $(".user-login-password-container").append(loginErrorContainer); 
+      if ((existingUsernames[i] !== loginUsername) && (existingPasswords[i] !== loginPassword)) {        // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT     
+        count++;
       };
     };
+      if (count > 0) {
+      $(".wrong-loginInfo-text").remove();
+      var loginErrorContainer = $("<small>");
+      loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
+      loginErrorContainer.text("Your username and/or password information are incorrect. Please try again.");
+      $(".user-login-password-container").append(loginErrorContainer); 
+      };
+    });
+  $("#login-username").val(""); 
+  $("#login-password").val(""); 
   });
-$("#login-username").val(""); 
-$("#login-password").val(""); 
-});
+  
 
 ////////////////// Google maps API Request -- Autocomplete ////////////////////////
 // location profile request 
@@ -231,6 +215,8 @@ SC.initialize({
 }());
 */
 /////////////// Function for shuffling elements in an array //////////////
+/*
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -238,158 +224,197 @@ function shuffle(array) {
   };
   return array;
 };
-
+*/
 
 ////////////////////////////////////   BEGINNING CODE FOR MATCHING SYSTEM   //////////////////////////////////
 
 ///////////////// Match Card Generator Function that will go inside "Match Me" ON-CLICK ////////////////////
-function seePotentialMatches() {
-  
-  currentPotentials = [
-    {name: "Tommy Huynh", age: 23, userLocation: "San Francisco, CA", profilePicture: "assets/images/MatchPageExample1.jpg"},
-    {name: "Elon Musk", age: 47, userLocation: "San Francisco, CA", profilePicture: "assets/images/MatchPageExample2.jpg"},
-    {name: "Susan Maple", age: 55, userLocation: "Portland, OR", profilePicture: "assets/images/MatchPageExample3.jpg"},
-    {name: "Ricky Bobby", age: 19, userLocation: "San Francisco, CA", profilePicture: "assets/images/MatchPageExample4.jpg"}
-];
-
-// buttons on page are cleared (so that matches can be displayed)
-$(".containerMatch").empty();
-
-// a loop to go through the (array of) current matches
-for (var i = 0; i < currentPotentials.length; i++) {
-
-    // variable for current match in the array
-    var currentPotential = currentPotentials[i];
-    
-    // create a div that is a card
-    var cardDiv = $("<div>");
-    $(cardDiv).addClass("card");
-    $(cardDiv).attr("id", "card-" + i);
-    $(cardDiv).attr("data-clickable", true);
-
-    // create a  div row to house potential's pic, name, & age;
-        // append to card
-    var cardMain = $("<div>").addClass("row m-1");
-    
-
-    // create an IMAGE for card - FIREBASE 
-        // images are placeholders for rn
-    var potentialPicDiv = $("<div>").addClass("col-md-6");
-        // create an image within the div and 
-        // set the source of the image to the correct file path
-    var potentialPic = $("<img>");
-    $(potentialPic).attr("src", currentPotential.profilePicture);
-        // give image a class so can be styled later in CSS - class: profile-card-pic
-        // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
-    $(potentialPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
-    $(potentialPic).attr("alt", "Match #" + (i + 1) + " Photo");
-    $(potentialPicDiv).append(potentialPic);
-    $(cardMain).append(potentialPicDiv);
-
-    // create the textual body of the card
-    var potentialDetailsChoices = $("<div>").addClass("col-md-6 col-xs text-center potential-details");
-    // create a card title to hold the name of the potential match
-    // & append to card body div
-    var potentialDetailsContent = $("<div>").addClass("card-body mt-md-5");
-    var potentialNameAge = $("<h5>").addClass("card-title");
-    $(potentialNameAge).text(currentPotential.name + ", " + currentPotential.age);
-    $(potentialDetailsContent).append(potentialNameAge);
-    // create match location text on card
-    var potentialLocation = $("<h6>").attr("id", "match-location");
-    $(potentialLocation).text(currentPotential.userLocation);
-    $(potentialDetailsContent).append(potentialLocation);
 
 
-    // create a  div for the buttons
-    var choiceButtons = $("<div>").addClass("choice-buttons");
-    // create like and dislike buttons
-    var likeButton = $("<button>").addClass("btn btn-light like-choice-button");
-    $(likeButton).attr("data-like", i);
-    // .html("<button><i class='em em-heart_decoration'</i></button>");
-    var emojiLike = $("<i>").addClass("em em-muscle");
-    $(likeButton).append(emojiLike);
-    var dislikeButton = $("<button>").addClass("btn btn-light dislike-choice-button");
-    $(dislikeButton).attr("data-dislike", i);
-    var emojiDislike = $("<i>").addClass("em em-x");
-    $(dislikeButton).append(emojiDislike);
-    // append those buttons to the div
-    $(choiceButtons).append(likeButton);
-    $(choiceButtons).append(dislikeButton);
-
-
-
-    // append these all to one another and to the card
-    $(potentialDetailsChoices).append(potentialDetailsContent);
-    $(potentialDetailsChoices).append(choiceButtons);
-    $(cardMain).append(potentialDetailsChoices);
-
-    // append this card to the match div (i.e. main content on page
-    $(cardDiv).append(cardMain);
-
-
-
-    $(".containerMatch").append(cardDiv);
-  };
-};
-
-var cardCount = 0;             // number of cards generated
 var otherUsersPreferencesArray = [];        // each index of this array will have an array of another user's preferences
 var otherUsersProfileArray = [];      // each index of this array will have an array of another user's profile information
-
+var eachUsersProfileInformation = [];       // goes into the array above
+// currentUserPreferencesArray
 
 function createCardByMatching() {
-
+  var currentUserPreferencesArray2 = [];
+  db.collection("currentUsersPreferences").get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        currentUserPreferencesArray2.push(doc.data().currentUserPreferenceLocation);
+        currentUserPreferencesArray2.push(doc.data().currentUserFitnessGoals);
+        currentUserPreferencesArray2.push(doc.data().currentUserSwolemateGender);
+        currentUserPreferencesArray2.push(doc.data().currentUserWeekdayAvailability);
+        currentUserPreferencesArray2.push(doc.data().currentUserWeekendAvailability);
+      });
+    });
+  
+        
   db.collection("allUserInformation").get().then(function(querySnapshot) {
+    var cardCount = 0;
     querySnapshot.forEach(function(doc) {
       var eachUsersPreferences = [];
-      var eachUsersProfileInformation = [];
       
-      eachUsersPreferences.push(doc.data().userObjectInformation.userPreferenceLocation);      // 0 index
-      /* eachUsersPreferences.push(doc.data().userObjectInformation.userAvailability);    */    // 1 index 
-      eachUsersPreferences.push(doc.data().userObjectInformation.userFitnessGoals);        // 2 index
-      eachUsersPreferences.push(doc.data().userObjectInformation.userSwoleMateGender);      // 3 index
+      eachUsersPreferences.push(doc.data().userObjectInformation.userPreferenceLocation);      // 0 index 
+      eachUsersPreferences.push(doc.data().userObjectInformation.userFitnessGoals);        // 1 index
+      eachUsersPreferences.push(doc.data().userObjectInformation.userSwolemateGender);      // 2 index
+      eachUsersPreferences.push(doc.data().userObjectInformation.userWeekdayAvailability);      // 3 index
+      eachUsersPreferences.push(doc.data().userObjectInformation.userWeekendAvailability);      // 4 index
+      console.log(eachUsersPreferences);
+      console.log(currentUserPreferencesArray2);
 
-      
-
-      otherUsersPreferencesArray.push(eachUsersPreferences);      // [[0,1,2,3],[0,1,2,3],[0,1,2,3]]
+        // if all 4 categories match
+        if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[8])     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        };
+        // if not all cards have been generated, and all preferences match EXCEPT fitness goals
+        if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[8])     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if not all cards have been generated, and ONLY location and availability match
+        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[8])     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if not all cards have been generated, and ONLY location and weekday matches
+        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if not all cards have been generated, and ONLY location and weekend matches
+        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if not all cards have been generated, and ONLY location matches
+        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if not all cards have been generated, and ONLY availability matches
+        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] !== eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        };
     });
+    if (cardCount > 0) {
+      // buttons on page are cleared (so that matches can be displayed)
+      $(".containerMatch").empty();
+
+      // a loop to go through the (array of) current matches
+      for (var i = 0; i < otherUsersProfileArray.length; i++) {
+
+      // variable for current match in the array
+      var currentUser = otherUsersProfileArray[i];
+    
+      // create a div that is a card
+      var cardDiv = $("<div>");
+      $(cardDiv).addClass("card");
+      $(cardDiv).attr("id", "card-" + i);
+      $(cardDiv).attr("data-clickable", true);
+
+      // create a  div row to house potential's pic, name, & age;
+      // append to card
+      var cardMain = $("<div>").addClass("row m-1");
+            
+
+      // create an IMAGE for card - FIREBASE 
+      // images are placeholders for rn
+      var potentialPicDiv = $("<div>").addClass("col-md-6");
+      // create an image within the div and 
+      // set the source of the image to the correct file path
+      var potentialPic = $("<img>");
+      $(potentialPic).attr("src", "assets/images/MatchPageExample2.jpg");
+      // give image a class so can be styled later in CSS - class: profile-card-pic
+      // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
+      $(potentialPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
+      $(potentialPic).attr("alt", "Match #" + (i + 1) + " Photo");
+      $(potentialPicDiv).append(potentialPic);
+      $(cardMain).append(potentialPicDiv);
+
+      // create the textual body of the card
+      var potentialDetailsChoices = $("<div>").addClass("col-md-6 col-xs text-center potential-details");
+      // create a card title to hold the name of the potential match
+      // & append to card body div
+      var potentialDetailsContent = $("<div>").addClass("card-body mt-md-5");
+      var potentialNameAge = $("<h5>").addClass("card-title");
+      $(potentialNameAge).text(currentUser[0] + ", " + currentUser[1]);
+      $(potentialDetailsContent).append(potentialNameAge);
+      // create match location text on card
+      var potentialLocation = $("<h6>").attr("id", "match-location");
+      $(potentialLocation).text(currentUser[2]);
+      $(potentialDetailsContent).append(potentialLocation);
+
+
+      // create a  div for the buttons
+      var choiceButtons = $("<div>").addClass("choice-buttons");
+      // create like and dislike buttons
+      var likeButton = $("<button>").addClass("btn btn-light like-choice-button");
+      $(likeButton).attr("data-like", i);
+      // .html("<button><i class='em em-heart_decoration'</i></button>");
+      var emojiLike = $("<i>").addClass("em em-muscle");
+      $(likeButton).append(emojiLike);
+      var dislikeButton = $("<button>").addClass("btn btn-light dislike-choice-button");
+      $(dislikeButton).attr("data-dislike", i);
+      var emojiDislike = $("<i>").addClass("em em-x");
+      $(dislikeButton).append(emojiDislike);
+      // append those buttons to the div
+      $(choiceButtons).append(likeButton);
+      $(choiceButtons).append(dislikeButton);
+
+
+
+      // append these all to one another and to the card
+      $(potentialDetailsChoices).append(potentialDetailsContent);
+      $(potentialDetailsChoices).append(choiceButtons);
+      $(cardMain).append(potentialDetailsChoices);
+
+      // append this card to the match div (i.e. main content on page
+      $(cardDiv).append(cardMain);
+
+
+
+      $(".containerMatch").append(cardDiv);
+      };
+      console.log(otherUsersProfileArray);
+    } else if (cardCount === 0) {
+      $(".containerMatch").empty();
+      $(".containerMatch").append("<h1 id='no-match-message'>You have no current matches!</h1>");
+      console.log(otherUsersProfileArray);
+    };
   });
-  shuffle(otherUsersPreferencesArray);             // randomly jumbles all of the signed up users
-                      
-  for (var i = 0; i<otherUsersPreferencesArray.length; i++) {         // loops through every single user
-    // if all 4 categories match
-    if ((currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] === otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] === otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] === otherUsersPreferencesArray[i][3])) {
-      cardCount++;
-      // INSERT MAKE THE CARD FUNCTION HERE
-    };
-    // if not all cards have been generated, and all preferences match EXCEPT fitness goals
-    if ((cardCount <= 3) && (currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] === otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] !== otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] === otherUsersPreferencesArray[i][3])) {
-      cardCount++;
-      // INSERT MAKE THE CARD FUNCTION HERE
-    };
-    // if not call cards have been generated, and ONLY location and availability match
-    if ((cardCount <= 3) && (currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] === otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] !== otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] !== otherUsersPreferencesArray[i][3])) {
-      cardCount++;
-      // INSERT MAKE THE CARD FUNCTION HERE
-    };
-    // if not all cards have been generated, and ONLY location matches
-    if ((cardCount <=3) && (currentUserPreferencesArray[0] === otherUsersPreferencesArray[i][0]) && (currentUserPreferencesArray[1] !== otherUsersPreferencesArray[i][1]) && (currentUserPreferencesArray[2] !== otherUsersPreferencesArray[i][2]) && (currentUserPreferencesArray[3] !== otherUsersPreferencesArray[i][3])) {
-      // INSERT MAKE THE CARD FUNCTION HERE
-    };
-  };
-  if (cardCount === 0) {
-    // INSERT A DYNAMICALLY CREATED MESSAGE HERE STATING THAT THE USER FOUND NO POTENTIAL MATCHES IN THEIR LOCATION
-  }
 };
 
+///////////////
 
+$("#get-matched").on("click", createCardByMatching);
 
 /*
-
-$("#get-matched").on("click", function(event) {
-       createCardByMatching();
-});
-
 
 $(".like-choice-button").on("click", function(event) {
        // INSERT a function here that creates a profile card and appends it to the current match page

@@ -242,19 +242,114 @@ function shuffle(array) {
 
 ////////////////////////////////////   BEGINNING CODE FOR MATCHING SYSTEM   //////////////////////////////////
 
+///////////////// Match Card Generator Function that will go inside "Match Me" ON-CLICK ////////////////////
+function seePotentialMatches() {
+  
+  currentPotentials = [
+    {name: "Tommy Huynh", age: 23, userLocation: "San Francisco, CA", profilePicture: "assets/images/MatchPageExample1.jpg"},
+    {name: "Elon Musk", age: 47, userLocation: "San Francisco, CA", profilePicture: "assets/images/MatchPageExample2.jpg"},
+    {name: "Susan Maple", age: 55, userLocation: "Portland, OR", profilePicture: "assets/images/MatchPageExample3.jpg"},
+    {name: "Ricky Bobby", age: 19, userLocation: "San Francisco, CA", profilePicture: "assets/images/MatchPageExample4.jpg"}
+];
+
+// buttons on page are cleared (so that matches can be displayed)
+$(".containerMatch").empty();
+
+// a loop to go through the (array of) current matches
+for (var i = 0; i < currentPotentials.length; i++) {
+
+    // variable for current match in the array
+    var currentPotential = currentPotentials[i];
+    
+    // create a div that is a card
+    var cardDiv = $("<div>");
+    $(cardDiv).addClass("card");
+    $(cardDiv).attr("id", "card-" + i);
+    $(cardDiv).attr("data-clickable", true);
+
+    // create a  div row to house potential's pic, name, & age;
+        // append to card
+    var cardMain = $("<div>").addClass("row m-1");
+    
+
+    // create an IMAGE for card - FIREBASE 
+        // images are placeholders for rn
+    var potentialPicDiv = $("<div>").addClass("col-md-6");
+        // create an image within the div and 
+        // set the source of the image to the correct file path
+    var potentialPic = $("<img>");
+    $(potentialPic).attr("src", currentPotential.profilePicture);
+        // give image a class so can be styled later in CSS - class: profile-card-pic
+        // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
+    $(potentialPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
+    $(potentialPic).attr("alt", "Match #" + (i + 1) + " Photo");
+    $(potentialPicDiv).append(potentialPic);
+    $(cardMain).append(potentialPicDiv);
+
+    // create the textual body of the card
+    var potentialDetailsChoices = $("<div>").addClass("col-md-6 col-xs text-center potential-details");
+    // create a card title to hold the name of the potential match
+    // & append to card body div
+    var potentialDetailsContent = $("<div>").addClass("card-body mt-md-5");
+    var potentialNameAge = $("<h5>").addClass("card-title");
+    $(potentialNameAge).text(currentPotential.name + ", " + currentPotential.age);
+    $(potentialDetailsContent).append(potentialNameAge);
+    // create match location text on card
+    var potentialLocation = $("<h6>").attr("id", "match-location");
+    $(potentialLocation).text(currentPotential.userLocation);
+    $(potentialDetailsContent).append(potentialLocation);
+
+
+    // create a  div for the buttons
+    var choiceButtons = $("<div>").addClass("choice-buttons");
+    // create like and dislike buttons
+    var likeButton = $("<button>").addClass("btn btn-light like-choice-button");
+    $(likeButton).attr("data-like", i);
+    // .html("<button><i class='em em-heart_decoration'</i></button>");
+    var emojiLike = $("<i>").addClass("em em-muscle");
+    $(likeButton).append(emojiLike);
+    var dislikeButton = $("<button>").addClass("btn btn-light dislike-choice-button");
+    $(dislikeButton).attr("data-dislike", i);
+    var emojiDislike = $("<i>").addClass("em em-x");
+    $(dislikeButton).append(emojiDislike);
+    // append those buttons to the div
+    $(choiceButtons).append(likeButton);
+    $(choiceButtons).append(dislikeButton);
+
+
+
+    // append these all to one another and to the card
+    $(potentialDetailsChoices).append(potentialDetailsContent);
+    $(potentialDetailsChoices).append(choiceButtons);
+    $(cardMain).append(potentialDetailsChoices);
+
+    // append this card to the match div (i.e. main content on page
+    $(cardDiv).append(cardMain);
+
+
+
+    $(".containerMatch").append(cardDiv);
+  };
+};
+
 var cardCount = 0;             // number of cards generated
 var otherUsersPreferencesArray = [];        // each index of this array will have an array of another user's preferences
+var otherUsersProfileArray = [];      // each index of this array will have an array of another user's profile information
 
-///////////////// Match Card Generator Function that will go inside "Match Me" ON-CLICK ////////////////////
+
 function createCardByMatching() {
 
   db.collection("allUserInformation").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
       var eachUsersPreferences = [];
+      var eachUsersProfileInformation = [];
+      
       eachUsersPreferences.push(doc.data().userObjectInformation.userPreferenceLocation);      // 0 index
       /* eachUsersPreferences.push(doc.data().userObjectInformation.userAvailability);    */    // 1 index 
       eachUsersPreferences.push(doc.data().userObjectInformation.userFitnessGoals);        // 2 index
       eachUsersPreferences.push(doc.data().userObjectInformation.userSwoleMateGender);      // 3 index
+
+      
 
       otherUsersPreferencesArray.push(eachUsersPreferences);      // [[0,1,2,3],[0,1,2,3],[0,1,2,3]]
     });
@@ -292,12 +387,12 @@ function createCardByMatching() {
 /*
 
 $("#get-matched").on("click", function(event) {
-       // INSERT THE createCardByMatching() function here!
+       createCardByMatching();
 });
 
 
 $(".like-choice-button").on("click", function(event) {
-       // INSERT a a function here that creates a profile card and appends it to the current match page
+       // INSERT a function here that creates a profile card and appends it to the current match page
 });
 
 

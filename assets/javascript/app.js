@@ -187,39 +187,37 @@ function initiate2() {
 google.maps.event.addDomListener(window, 'load', initiate2);
 
 
-//////////////////// SOUND CLOUD API WIDGET //////////////////////////////
+//////////////////// SOUND CLOUD API WIDGET On Click//////////////////////////////
 
-/*
-var iframeElement   = document.querySelector('iframe');
-var iframeElementID = iframeElement.id;
-var widget1         = SC.Widget(iframeElement);
-var widget2         = SC.Widget(iframeElementID);
+$(".fa-soundcloud").on("click", function (){
+  $("body").append("<iframe id='sc-widget' width='100%' height='166' scrolling='no' frameborder='no' src='https://w.soundcloud.com/player/?url=https://soundcloud.com/user-160781157/sets/workout&show_artwork=true'></iframe>")
+})
 
-SC.initialize({
-  client_id: 'YOUR_CLIENT_ID'
-  });
+// var iframeElement   = document.querySelector('iframe');
+// var iframeElementID = iframeElement.id;
+// var widget1         = SC.Widget(iframeElement);
+// var widget2         = SC.Widget(iframeElementID);
 
-  var track_url = 'http://soundcloud.com/forss/flickermood';
-  SC.oEmbed(track_url, { auto_play: true }).then(function(oEmbed) {
-  console.log('oEmbed response: ', oEmbed);
-  });
+// SC.initialize({
+//   client_id: 'YOUR_CLIENT_ID'
+//   });
 
-(function(){
-  var widgetIframe = document.getElementById('sc-widget'),
-      widget       = SC.Widget(widgetIframe),
-      newSoundUrl = 'http://api.soundcloud.com/tracks/160781157';
+// (function(){
+//   var widgetIframe = document.getElementById('sc-widget'),
+//       widget       = SC.Widget(widgetIframe),
+//       newSoundUrl = 'http://api.soundcloud.com/tracks/160781157';
 
-    widget.bind(SC.Widget.Events.READY, function() {
-    // load new widget
-    widget.bind(SC.Widget.Events.FINISH, function() {
-      widget.load(newSoundUrl, {
-        show_artwork: false
-      });
-    });
-  });
+//     widget.bind(SC.Widget.Events.READY, function() {
+//     // load new widget
+//     widget.bind(SC.Widget.Events.FINISH, function() {
+//       widget.load(newSoundUrl, {
+//         show_artwork: false
+//       });
+//     });
+//   });
 
-}());
-*/
+// }());
+
 /////////////// Function for shuffling elements in an array //////////////
 /*
 

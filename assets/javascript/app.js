@@ -128,7 +128,7 @@ $(".sign-in-button").on("click", function(event) {
   var existingUsernames = [];
   var existingPasswords = [];
   var count = 0;
-
+  
   db.collection("allUserInformation").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
       existingUsernames.push(doc.data().userObjectInformation.username);
@@ -143,9 +143,15 @@ $(".sign-in-button").on("click", function(event) {
         currentUserWeekdayAvailability: doc.data().userObjectInformation.userWeekdayAvailability,
         currentUserWeekendAvailability: doc.data().userObjectInformation.userWeekendAvailability
         });
+      } else {
+        $(".wrong-loginInfo-text").remove();
+        var loginErrorContainer = $("<small>");
+        loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
+        loginErrorContainer.text("Your username and/or password information are incorrect. Please try again.");
+        $(".user-login-password-container").append(loginErrorContainer);
       };
     });
-
+    
     for (var i = 0; i<existingUsernames.length; i++) {
       if ((existingUsernames[i] !== loginUsername) && (existingPasswords[i] !== loginPassword)) {        // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT     
         count++;
@@ -160,7 +166,7 @@ $(".sign-in-button").on("click", function(event) {
       };
     });
   $("#login-username").val(""); 
-  $("#login-password").val(""); 
+  $("#login-password").val("");
   });
   
 
@@ -230,13 +236,14 @@ function shuffle(array) {
 
 ///////////////// Match Card Generator Function that will go inside "Match Me" ON-CLICK ////////////////////
 
-
+/*
 var otherUsersPreferencesArray = [];        // each index of this array will have an array of another user's preferences
 var otherUsersProfileArray = [];      // each index of this array will have an array of another user's profile information
 var eachUsersProfileInformation = [];       // goes into the array above
+*/
+ 
 // currentUserPreferencesArray
-
-function createCardByMatching() {
+$("#get-matched").on("click", function() {
   var currentUserPreferencesArray2 = [];
   db.collection("currentUsersPreferences").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
@@ -248,11 +255,13 @@ function createCardByMatching() {
       });
     });
   
-        
   db.collection("allUserInformation").get().then(function(querySnapshot) {
     var cardCount = 0;
+    var otherUsersProfileArray = [];
     querySnapshot.forEach(function(doc) {
       var eachUsersPreferences = [];
+      var eachUsersProfileInformation = [];
+      
       
       eachUsersPreferences.push(doc.data().userObjectInformation.userPreferenceLocation);      // 0 index 
       eachUsersPreferences.push(doc.data().userObjectInformation.userFitnessGoals);        // 1 index
@@ -263,25 +272,16 @@ function createCardByMatching() {
       console.log(currentUserPreferencesArray2);
 
         // if all 4 categories match
-        if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+        if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
           cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[8])     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
-        };
-        // if not all cards have been generated, and all preferences match EXCEPT fitness goals
-        if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
-          cardCount++;
-          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
-          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
-          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
-          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[8])     // image
-          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
-        }
-        // if not all cards have been generated, and ONLY location and availability match
-        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+        } 
+        // if all preferences match EXCEPT fitness goals
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
           cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
@@ -289,8 +289,18 @@ function createCardByMatching() {
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[8])     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         }
-        // if not all cards have been generated, and ONLY location and weekday matches
-        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+        // if ONLY location and availability match
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[8])     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if ONLY location and weekday matches
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+          cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
@@ -298,37 +308,77 @@ function createCardByMatching() {
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         }
         // if not all cards have been generated, and ONLY location and weekend matches
-        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         }
-        // if not all cards have been generated, and ONLY location matches
-        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+        // if not all cards have been generated, and everything BUT weekday matches
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] == eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] == eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         }
-        // if not all cards have been generated, and ONLY availability matches
-        else if ((cardCount < 3) && (currentUserPreferencesArray2[0] !== eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+        // if not all cards have been generated, and everything BUT weekend matches
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] == eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] == eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if not all cards have been generated, and everything BUT availability matches
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] == eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] == eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if ONLY location matches
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if ONLY availability matches
+        else if ((currentUserPreferencesArray2[0] !== eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if only location DOESN'T MATCH
+        else if ((currentUserPreferencesArray2[0] !== eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+          cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         };
+        console.log(otherUsersProfileArray);
     });
     if (cardCount > 0) {
       // buttons on page are cleared (so that matches can be displayed)
       $(".containerMatch").empty();
-
+  
       // a loop to go through the (array of) current matches
       for (var i = 0; i < otherUsersProfileArray.length; i++) {
-
+  
       // variable for current match in the array
       var currentUser = otherUsersProfileArray[i];
     
@@ -337,12 +387,12 @@ function createCardByMatching() {
       $(cardDiv).addClass("card");
       $(cardDiv).attr("id", "card-" + i);
       $(cardDiv).attr("data-clickable", true);
-
+  
       // create a  div row to house potential's pic, name, & age;
       // append to card
       var cardMain = $("<div>").addClass("row m-1");
             
-
+  
       // create an IMAGE for card - FIREBASE 
       // images are placeholders for rn
       var potentialPicDiv = $("<div>").addClass("col-md-6");
@@ -356,7 +406,7 @@ function createCardByMatching() {
       $(potentialPic).attr("alt", "Match #" + (i + 1) + " Photo");
       $(potentialPicDiv).append(potentialPic);
       $(cardMain).append(potentialPicDiv);
-
+  
       // create the textual body of the card
       var potentialDetailsChoices = $("<div>").addClass("col-md-6 col-xs text-center potential-details");
       // create a card title to hold the name of the potential match
@@ -369,8 +419,8 @@ function createCardByMatching() {
       var potentialLocation = $("<h6>").attr("id", "match-location");
       $(potentialLocation).text(currentUser[2]);
       $(potentialDetailsContent).append(potentialLocation);
-
-
+  
+  
       // create a  div for the buttons
       var choiceButtons = $("<div>").addClass("choice-buttons");
       // create like and dislike buttons
@@ -386,36 +436,33 @@ function createCardByMatching() {
       // append those buttons to the div
       $(choiceButtons).append(likeButton);
       $(choiceButtons).append(dislikeButton);
-
-
-
+  
+  
+  
       // append these all to one another and to the card
       $(potentialDetailsChoices).append(potentialDetailsContent);
       $(potentialDetailsChoices).append(choiceButtons);
       $(cardMain).append(potentialDetailsChoices);
-
+  
       // append this card to the match div (i.e. main content on page
       $(cardDiv).append(cardMain);
-
-
-
+  
+  
+  
       $(".containerMatch").append(cardDiv);
       };
-      console.log(otherUsersProfileArray);
     } else if (cardCount === 0) {
       $(".containerMatch").empty();
       $(".containerMatch").append("<h1 id='no-match-message'>You have no current matches!</h1>");
       console.log(otherUsersProfileArray);
     };
   });
-};
+});
+
+
 
 ///////////////
-
-$("#get-matched").on("click", createCardByMatching);
-
 /*
-
 $(".like-choice-button").on("click", function(event) {
        // INSERT a function here that creates a profile card and appends it to the current match page
 });

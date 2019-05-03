@@ -31,7 +31,7 @@
 }
 
 .containerMatch {
-    padding-bottom: 250px;
+    padding: 300px;
 }
 
 #matches-info {
@@ -56,6 +56,7 @@
 }
 
 .match-footer {
+    padding: 10px;
     background-color: #343a40 !important;
     text-align: center;
     color: rgba(255,255,255,.5) !important;
@@ -223,5 +224,10 @@ object-fit: cover;
 }
 
 #sc-container {
+    position: relative;
+}
+
+.widget-empty-div {
+    margin: auto;
     position: relative;
 }

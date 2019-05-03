@@ -183,7 +183,8 @@ google.maps.event.addDomListener(window, 'load', initiate2);
 //////////////////// SOUND CLOUD API WIDGET On Click//////////////////////////////
 
 $(".fa-soundcloud").on("click", function (){
-  $("body").append("<iframe id='sc-widget' width='100%' height='166' scrolling='no' frameborder='no' src='https://w.soundcloud.com/player/?url=https://soundcloud.com/user-160781157/sets/workout&show_artwork=true'></iframe>")
+  $("#sc-widget").hide();
+  $(".widget-empty-div").append("<iframe id='sc-widget' width='100%' height='166' scrolling='no' frameborder='no' src='https://w.soundcloud.com/player/?url=https://soundcloud.com/user-160781157/sets/workout&show_artwork=true'></iframe>")
 })
 
 // var iframeElement   = document.querySelector('iframe');

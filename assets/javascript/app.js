@@ -135,7 +135,7 @@ $(".sign-in-button").on("click", function(event) {
       existingPasswords.push(doc.data().userObjectInformation.password);
       if ((doc.data().userObjectInformation.username === loginUsername) && (doc.data().userObjectInformation.password === loginPassword)) {          // If username and password match an existing one...
         window.location.href = "MatchMe.html"; 
-
+        console.log("Worked")
         db.collection("currentUsersPreferences").doc("UsZpSo6kUVDWQfh3FdUz").set({          // Creating the current user's preferences in firestore
         currentUserPreferenceLocation: doc.data().userObjectInformation.userPreferenceLocation,
         currentUserFitnessGoals: doc.data().userObjectInformation.userFitnessGoals,
@@ -143,21 +143,14 @@ $(".sign-in-button").on("click", function(event) {
         currentUserWeekdayAvailability: doc.data().userObjectInformation.userWeekdayAvailability,
         currentUserWeekendAvailability: doc.data().userObjectInformation.userWeekendAvailability
         });
-      } else {
-        $(".wrong-loginInfo-text").remove();
-        var loginErrorContainer = $("<small>");
-        loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
-        loginErrorContainer.text("Your username and/or password information are incorrect. Please try again.");
-        $(".user-login-password-container").append(loginErrorContainer);
-      };
+      }; 
     });
-    
-    for (var i = 0; i<existingUsernames.length; i++) {
-      if ((existingUsernames[i] !== loginUsername) && (existingPasswords[i] !== loginPassword)) {        // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT     
+      for (var i = 0; i<existingUsernames.length; i++) {
+      if ((existingUsernames[i] === loginUsername) && (existingPasswords[i] === loginPassword)) {        // CODE BELOW DISPLAYS ONE ERROR MESSAGE IF USERNAME AND PASSWORD ARE INCORRECT     
         count++;
       };
     };
-      if (count > 0) {
+      if (count < 1) {
       $(".wrong-loginInfo-text").remove();
       var loginErrorContainer = $("<small>");
       loginErrorContainer.addClass("form-text text-muted wrong-loginInfo-text");
@@ -165,8 +158,8 @@ $(".sign-in-button").on("click", function(event) {
       $(".user-login-password-container").append(loginErrorContainer); 
       };
     });
-  $("#login-username").val(""); 
-  $("#login-password").val("");
+    $("#login-username").val(""); 
+    $("#login-password").val("");
   });
   
 
@@ -266,8 +259,10 @@ $("#get-matched").on("click", function() {
       eachUsersPreferences.push(doc.data().userObjectInformation.userSwolemateGender);      // 2 index
       eachUsersPreferences.push(doc.data().userObjectInformation.userWeekdayAvailability);      // 3 index
       eachUsersPreferences.push(doc.data().userObjectInformation.userWeekendAvailability);      // 4 index
+      /*
       console.log(eachUsersPreferences);
       console.log(currentUserPreferencesArray2);
+      */
 
         // if all 4 categories match
         if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
@@ -449,6 +444,7 @@ $("#get-matched").on("click", function() {
   
       $(".containerMatch").append(cardDiv);
       };
+    
     } else if (cardCount === 0) {
       $(".containerMatch").empty();
       $(".containerMatch").append("<h1 id='no-match-message'>You have no current matches!</h1>");
@@ -457,21 +453,138 @@ $("#get-matched").on("click", function() {
   });
 });
 
-
-
-///////////////
-/*
-$(".like-choice-button").on("click", function(event) {
-       // INSERT a function here that creates a profile card and appends it to the current match page
+////////////////////////////////
+$("#show-matches").on("click", function() {
+  window.location.href = "CurrentMatchPage.html"; 
 });
+//////////////////////////////// 
+  $(".like-choice-button").on("click", function() {
+    console.log("hello");
+    var thisCardsName = this.$(".card-title");
+    
+    db.collection("allUserInformation").get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        if (thisCardsName === doc.data().userObjectInformation.username) {
+          // create a div that is a card
+        var cardDiv = $("<div>");
+        $(cardDiv).addClass("card");
+
+        // create a  div row to house match's pic and single-word details
+        var cardMainOne = $("<div>").addClass("row m-1");
+        
+
+        // create an IMAGE for card - FIREBASE 
+            // images are placeholders for rn
+        var matchPicDiv = $("<div>").addClass("col-md-6");
+            // create an image within the div and 
+            // set the source of the image to the correct file path
+        var matchPic = $("<img>");
+        $(matchPic).attr("src", "assets/images/MatchPageExample3.jpg");
+            // give image a class so can be styled later in CSS - class: profile-card-pic
+            // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
+        $(matchPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
+        $(matchPic).attr("alt", "Match #" + (i + 1) + " Photo");
+        $(matchPicDiv).append(matchPic);
+        $(cardMainOne).append(matchPicDiv);
+
+        // create the textual body of the card
+        var matchDetails = $("<div>").addClass("col-md-6 col-xs text-center match-details");
+        // create a card title to hold the name of the potential match
+        
+        // & append to card body div
+        var matchDetailsContent = $("<div>").addClass("card-body mt-md-5");
+        var matchName = $("<h5>").addClass("card-title");
+        $(matchName).text(doc.data().userObjectInformation.userProfileInformation[0]);
+        $(matchDetailsContent).append(matchName);
+
+        // create the text fields for age, gender, location, weight, activity level, 
+            // experience level, fitness goals, availability, why swolemates
+                // age
+        var matchAge = $("<div>").addClass("match-age");
+        $(matchAge).html("<p><span class='age-header'>Age: </span>" + doc.data().userObjectInformation.userProfileInformation[3] + "</p>");
+        $(matchDetailsContent).append(matchAge);
+
+                // gender
+        var matchGender = $("<div>").addClass("match-gender");
+        $(matchGender).html("<p><span class='gender-header'>Gender: </span>" + doc.data().userObjectInformation.userProfileInformation[1] + "</p>");
+        $(matchDetailsContent).append(matchGender);
+
+                // location
+        var matchLocation = $("<div>").addClass("match-location");
+        $(matchLocation).html("<p><span class='location-header'>Location: </span>" + doc.data().userObjectInformation.userProfileInformation[2] + "</p>");
+        $(matchDetailsContent).append(matchLocation);
+
+                // weight
+        var matchWeight = $("<div>").addClass("match-weight");
+        $(matchWeight).html("<p><span class='weight-header'>Weight: </span>" + doc.data().userObjectInformation.userProfileInformation[4] + "</p>");
+        $(matchDetailsContent).append(matchWeight);
+
+                // activity level
+        var matchActivity = $("<div>").addClass("match-activity");
+        $(matchActivity).html("<p><span class='activity-header'>Activity Level: </span>" + doc.data().userObjectInformation.userProfileInformation[5] + "</p>");
+        $(matchDetailsContent).append(matchActivity);
+
+                // experience level
+        var matchExperience = $("<div>").addClass("match-experience");
+        $(matchExperience).html("<p><span class='experience-header'>Experience: </span>" + doc.data().userObjectInformation.userProfileInformation[6] + "</p>");
+        $(matchDetailsContent).append(matchExperience);
+
+        // a new row for the longer content that follow the above more list-like details
+        var cardMainTwo = $("<div>").addClass("row m-1");
+        var matchDetailsContent2 = $("<div>").addClass("col");
 
 
+                // fitness goals - a list
+        var matchGoals = $("<div>").addClass("match-goals");
+        $(matchGoals).append("<p><span class='goal-header'>Goals:</span></p>");
+        var goalsList = $("<ul>")
+        var goal = $("<li>");
+          goal.text(doc.data().userObjectInformation.userFitnessGoals);
+          goalsList.append(goal);
+        $(matchGoals).append(goalsList);
+        $(matchDetailsContent2).append(matchGoals);
 
-$("show-matches").on("click", function(event) {
-      // INSERT a function here goes to current match page
-});
+                // availability
+        var matchAvailability = $("<div>").addClass("match-availability");
+        // if(currentMatch.userAvailability === "Weekday mornings & Weekend mornings")
+        var availabilityText = "<p>You might be able to hit the gym together on weekday " + doc.data().userObjectInformation.userWeekdayAvailability + " and weekend " + doc.data().userObjectInformation.userWeekendAvailability + "</p>";
+        $(matchAvailability).html(availabilityText);
+        $(matchDetailsContent2).append(matchAvailability);
+        // this will depend on how the data is stored from the availability table
+        //     conditional statments could determine what the sentence says
+        
 
-*/
+                // why swolemates
+        var matchBlurb = $("<div>").addClass("match-blurb");
+        $(matchBlurb).append("<p><span class='blurb-header'>Reason for Swolemates:</span></p>");
+        $(matchBlurb).append("<p>" + doc.data().userObjectInformation.userProfileInformation[7]);
+        $(matchDetailsContent2).append(matchBlurb);
+
+        // heart emoji icon to indicate that this is a mutual like
+        var heartIcon = $("<div>").addClass("d-flex flex-row-reverse bd-highlight profile-heart");
+        $(heartIcon).html("<i class='em em-heart'</i>");
+        
+
+
+        // append these all to one another and to the card
+        $(cardMainOne).append(matchDetailsContent);
+        $(cardMainTwo).append(matchDetailsContent2);
+
+        // append this card to the match div (i.e. main content on page
+        $(cardDiv).append(cardMainOne);
+        $(cardDiv).append(cardMainTwo);
+        $(cardDiv).append(heartIcon);
+
+
+        $("#current-matches-container").append(cardDiv);
+        };  
+      });
+    });
+  });
+
+        
+
+
 
 
 /////////// PSEUDOCODE TASKS ///////////

@@ -256,9 +256,7 @@ var eachUsersProfileInformation = [];       // goes into the array above
 $(".current-matches-match-button").hide();
 $("#current-matches-container").hide();
 $("#get-matched").on("click", function() {
-
   $(".fa-soundcloud").remove();
-  $(".current-matches-match-button").show();
   var currentUserPreferencesArray2 = [];
   var userFullName = "";
 
@@ -402,16 +400,17 @@ $("#get-matched").on("click", function() {
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         };
-        console.log(cardCount);
+        $(".current-matches-match-button").show();
     });
     if (cardCount > 0) {
-      console.log(otherUsersProfileArray);
+      
     // buttons on page are cleared (so that matches can be displayed)
-      $(".containerMatch").empty();
+      if (cardCount > 0) {
+        $(".containerMatch").empty(); 
+      };
   
       // a loop to go through the (array of) current matches
       for (var i = 0; i < otherUsersProfileArray.length; i++) {
-  
       // variable for current match in the array
       var currentUser = otherUsersProfileArray[i];
     
@@ -423,7 +422,7 @@ $("#get-matched").on("click", function() {
   
       // create a  div row to house potential's pic, name, & age;
       // append to card
-      var cardMain = $("<div>").addClass("container");
+      var cardMain = $("<div>").addClass("container potential-match-card-container");
             
   
       // create an IMAGE for card - FIREBASE 
@@ -445,7 +444,7 @@ $("#get-matched").on("click", function() {
       // create a card title to hold the name of the potential match
       // & append to card body div
       var potentialDetailsContent = $("<div>").addClass("card-text");
-      var potentialNameAge = $("<h5>").addClass("card-title");
+      var potentialNameAge = $("<h5>").addClass("card-title this-cards-username");
       $(potentialNameAge).text(currentUser[0] + ", " + currentUser[1]);
       $(potentialDetailsContent).append(potentialNameAge);
       // create match location text on card
@@ -482,12 +481,11 @@ $("#get-matched").on("click", function() {
       $(cardDiv).append(cardMain);
   
       $(".containerMatch").append(cardDiv);
-
+      };
       ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
       $(".dislike-choice-button").on("click", function() {
         $(cardDiv).remove();
       });
-      
       ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
       $(".like-choice-button").on("click", function() {
         console.log("hello");
@@ -601,9 +599,8 @@ $("#get-matched").on("click", function() {
               };
             });
           });
-        });
-      };
-        
+      });
+      
       $(".current-matches-match-button").on("click", function() {
         $(".fa-soundcloud").remove();
         $(".current-matches-match-button").hide();

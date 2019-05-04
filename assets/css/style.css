@@ -22,7 +22,11 @@
 }
 
 .current-matches-match-button {
+    margin: 0%;
     margin-bottom: 10%; 
+    width: 45%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #login {
@@ -69,21 +73,26 @@
 }
 
 /* potential match cards profile image*/
-/*
+
 .profile-card-pic {
     max-width: 400px;
     width: 100%; 
     height: 90%;
     max-height: 350px;
-    margin: 20px;
-    padding: 10px;
+    /* margin: 20px;
+    padding: 10px; */
     object-fit: cover;
 } 
-*/
+
+/* .special-card-word {
+    color: #795ee5;
+} */
+
 .card-img-top {
 width: 100%;
 height: 100%;
 object-fit: cover;
+margin: 0;
 }
 /* potential match profile cards  */
 .card {
@@ -94,8 +103,11 @@ object-fit: cover;
     width: 80%;
     max-width: 700px;
     height: 30%;
-    border: 4px solid #ff6f61;
     border-radius: 10px;
+}
+
+.whole-card {
+    border: 4px solid #ff6f61;
 }
 
 /* cause the cards to fade when the dislike button on potential match card clicked */
@@ -107,7 +119,7 @@ object-fit: cover;
 /* div of buttons on potential match profile cards */
 .choice-buttons {
     padding: 10px;
-    margin: 10px;
+    margin: 0;
 }
 
 /* individual like/dislike buttons within above div */
@@ -119,10 +131,6 @@ object-fit: cover;
     border: 1px solid #4286f4;
 }
 
-.card-content {
-    background-color: #ffffff;
-    background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
-}
 
 .age-header, .gender-header, .location-header,
 .weight-header, .activity-header, .experience-header,
@@ -135,9 +143,20 @@ object-fit: cover;
 } */
 
 /* text on potential match profile cards */
- /* .potential-details {
-    margin-top: 50px;
-} */
+ .potential-details {
+    /* margin: 3%; */
+    background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
+}
+
+.match-details {
+    background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-light.png");
+}
+
+/* .card-text {
+    background-color: #ffffff;
+    /* border-style: none !important; */
+/* } */ 
+
 
 .wrong-password-text {
     color: red !important;
@@ -190,6 +209,7 @@ object-fit: cover;
     border: none;
     margin-top: 2em;
 }
+
 
 
 

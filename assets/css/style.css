@@ -147,6 +147,14 @@ object-fit: cover;
     color: red !important;
 }
 
+.password-length-wrong {
+    color: red !important;
+}
+
+.blank-username-text {
+    color: red !important;
+}
+
 .wrong-loginInfo-text {
     color: red !important;
 }

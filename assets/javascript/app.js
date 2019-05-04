@@ -644,7 +644,7 @@ $("#nav-get-matched-2").on("click", function() {
 // $("nav-show-matches").on("click", FUNCTION FOR SHOWING CURRENT MATCHES);
 
 $("#nav-logout-2").on("click", function() {
-  window.location.href = "openingScreen.html";
+  window.location.href = "https://tangerinez.github.io/Swolemates.io/";
 });
 
 

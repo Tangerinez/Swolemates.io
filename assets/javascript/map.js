@@ -1,7 +1,7 @@
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -33.8688, lng: 151.2195},
-      zoom: 13
+      center: {lat: 37.791246, lng: -122.3938},
+      zoom: 17
     });
 
     var input = document.getElementById('pac-input');

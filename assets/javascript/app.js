@@ -290,8 +290,6 @@ $("#get-matched").on("click", function() {
       eachUsersPreferences.push(doc.data().userObjectInformation.userWeekdayAvailability);      // 3 index
       eachUsersPreferences.push(doc.data().userObjectInformation.userWeekendAvailability);      // 4 index
       
-      console.log(eachUsersPreferences);
-      console.log(currentUserPreferencesArray2);
       
         if (userFullName === doc.data().userObjectInformation.userProfileInformation[0]) {
           cardCount;
@@ -404,10 +402,10 @@ $("#get-matched").on("click", function() {
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         };
-        console.log(otherUsersProfileArray);
         console.log(cardCount);
     });
     if (cardCount > 0) {
+      console.log(otherUsersProfileArray);
     // buttons on page are cleared (so that matches can be displayed)
       $(".containerMatch").empty();
   
@@ -489,11 +487,14 @@ $("#get-matched").on("click", function() {
       $(".dislike-choice-button").on("click", function() {
         $(cardDiv).remove();
       });
-
+      
       ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
       $(".like-choice-button").on("click", function() {
+        console.log("hello");
         db.collection("allUserInformation").get().then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
+            console.log(currentUser[0]);
+            console.log(doc.data().userObjectInformation.userProfileInformation[0]);
             if (currentUser[0] === doc.data().userObjectInformation.userProfileInformation[0]) {
               // create a div that is a card
               var cardDiv = $("<div>");

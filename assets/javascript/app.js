@@ -169,7 +169,8 @@ $(".sign-in-button").on("click", function(event) {
       existingUsernames.push(doc.data().userObjectInformation.username);
       existingPasswords.push(doc.data().userObjectInformation.password);
       if ((doc.data().userObjectInformation.username === loginUsername) && (doc.data().userObjectInformation.password === loginPassword)) {          // If username and password match an existing one...
-        window.location.href = "MatchMe.html"; 
+        window.location.href = "MatchMe.html";
+        $(".current-matches-match-button").hide(); 
         console.log("Worked")
         db.collection("currentUsersPreferences").doc("UsZpSo6kUVDWQfh3FdUz").set({          // Creating the current user's preferences in firestore
         currentUserPreferenceLocation: doc.data().userObjectInformation.userPreferenceLocation,
@@ -252,7 +253,6 @@ var otherUsersProfileArray = [];      // each index of this array will have an a
 var eachUsersProfileInformation = [];       // goes into the array above
 */
  
-// currentUserPreferencesArray
 $(".current-matches-match-button").hide();
 $("#current-matches-container").hide();
 $("#get-matched").on("click", function() {
@@ -408,92 +408,92 @@ $("#get-matched").on("click", function() {
       if (cardCount > 0) {
         $(".containerMatch").empty(); 
       };
-  
+      
       // a loop to go through the (array of) current matches
       for (var i = 0; i < otherUsersProfileArray.length; i++) {
-      // variable for current match in the array
-      var currentUser = otherUsersProfileArray[i];
+        // variable for current match in the array
+        var currentUser = otherUsersProfileArray[i];
+      
+        // create a div that is a card
+        var cardDiv = $("<div>");
+        cardDiv.addClass("card whole-card");
+        cardDiv.attr("id", "card-" + i);
+        cardDiv.attr("data-clickable", true);
+        cardDiv.attr("data-name", currentUser[0]);
     
-      // create a div that is a card
-      var cardDiv = $("<div>");
-      $(cardDiv).addClass("card whole-card");
-      $(cardDiv).attr("id", "card-" + i);
-      $(cardDiv).attr("data-clickable", true);
-  
-      // create a  div row to house potential's pic, name, & age;
-      // append to card
-      var cardMain = $("<div>").addClass("container potential-match-card-container");
-            
-  
-      // create an IMAGE for card - FIREBASE 
-      // images are placeholders for rn
-      var potentialPicDiv = $("<div>");
-      // create an image within the div and 
-      // set the source of the image to the correct file path
-      var potentialPic = $("<img>");
-      $(potentialPic).attr("src", "assets/images/MatchPageExample2.jpg");
-      // give image a class so can be styled later in CSS - class: profile-card-pic
-      // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
-      $(potentialPic).addClass("profile-card-pic no-gutters card-img img-fluid m-xs-auto");
-      $(potentialPic).attr("alt", "Match #" + (i + 1) + " Photo");
-      $(potentialPicDiv).append(potentialPic);
-      $(cardMain).append(potentialPicDiv);
-  
-      // create the textual body of the card
-      var potentialDetailsChoices = $("<div>").addClass("text-center potential-details");
-      // create a card title to hold the name of the potential match
-      // & append to card body div
-      var potentialDetailsContent = $("<div>").addClass("card-text");
-      var potentialNameAge = $("<h5>").addClass("card-title this-cards-username");
-      $(potentialNameAge).text(currentUser[0] + ", " + currentUser[1]);
-      $(potentialDetailsContent).append(potentialNameAge);
-      // create match location text on card
-      var potentialLocation = $("<h6>").attr("id", "match-location");
-      // $(potentialLocation).addClass("card-body");
-      $(potentialLocation).text(currentUser[2]);
-      $(potentialDetailsContent).append(potentialLocation);
-  
-  
-      // create a  div for the buttons
-      var choiceButtons = $("<div>").addClass("choice-buttons");
-      // create like and dislike buttons
-      var likeButton = $("<button>").addClass("btn btn-light like-choice-button");
-      $(likeButton).attr("data-like", i);
-      // .html("<button><i class='em em-heart_decoration'</i></button>");
-      var emojiLike = $("<i>").addClass("em em-muscle");
-      $(likeButton).append(emojiLike);
-      var dislikeButton = $("<button>").addClass("btn btn-light dislike-choice-button");
-      $(dislikeButton).attr("data-dislike", i);
-      var emojiDislike = $("<i>").addClass("em em-x");
-      $(dislikeButton).append(emojiDislike);
-      // append those buttons to the div
-      $(choiceButtons).append(likeButton);
-      $(choiceButtons).append(dislikeButton);
-  
-  
-  
-      // append these all to one another and to the card
-      $(potentialDetailsChoices).append(potentialDetailsContent);
-      $(potentialDetailsChoices).append(choiceButtons);
-      $(cardMain).append(potentialDetailsChoices);
-  
-      // append this card to the match div (i.e. main content on page
-      $(cardDiv).append(cardMain);
-  
-      $(".containerMatch").append(cardDiv);
+        // create a  div row to house potential's pic, name, & age;
+        // append to card
+        var cardMain = $("<div>").addClass("container potential-match-card-container");
+              
+    
+        // create an IMAGE for card - FIREBASE 
+        // images are placeholders for rn
+        var potentialPicDiv = $("<div>");
+        // create an image within the div and 
+        // set the source of the image to the correct file path
+        var potentialPic = $("<img>");
+        $(potentialPic).attr("src", "assets/images/MatchPageExample2.jpg");
+        // give image a class so can be styled later in CSS - class: profile-card-pic
+        // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
+        $(potentialPic).addClass("profile-card-pic no-gutters card-img img-fluid m-xs-auto");
+        $(potentialPic).attr("alt", "Match #" + (i + 1) + " Photo");
+        $(potentialPicDiv).append(potentialPic);
+        $(cardMain).append(potentialPicDiv);
+    
+        // create the textual body of the card
+        var potentialDetailsChoices = $("<div>").addClass("text-center potential-details");
+        // create a card title to hold the name of the potential match
+        // & append to card body div
+        var potentialDetailsContent = $("<div>").addClass("card-text");
+        var potentialNameAge = $("<h5>").addClass("card-title this-cards-username");
+        $(potentialNameAge).text(currentUser[0] + ", " + currentUser[1]);
+        $(potentialDetailsContent).append(potentialNameAge);
+        // create match location text on card
+        var potentialLocation = $("<h6>").attr("id", "match-location");
+        // $(potentialLocation).addClass("card-body");
+        $(potentialLocation).text(currentUser[2]);
+        $(potentialDetailsContent).append(potentialLocation);
+    
+    
+        // create a  div for the buttons
+        var choiceButtons = $("<div>").addClass("choice-buttons");
+        // create like and dislike buttons
+        var likeButton = $("<button>").addClass("btn btn-light like-choice-button");
+        $(likeButton).attr("data-like", i);
+        // .html("<button><i class='em em-heart_decoration'</i></button>");
+        var emojiLike = $("<i>").addClass("em em-muscle");
+        $(likeButton).append(emojiLike);
+        var dislikeButton = $("<button>").addClass("btn btn-light dislike-choice-button");
+        $(dislikeButton).attr("data-dislike", i);
+        var emojiDislike = $("<i>").addClass("em em-x");
+        $(dislikeButton).append(emojiDislike);
+        // append those buttons to the div
+        $(choiceButtons).append(likeButton);
+        $(choiceButtons).append(dislikeButton);
+    
+    
+    
+        // append these all to one another and to the card
+        $(potentialDetailsChoices).append(potentialDetailsContent);
+        $(potentialDetailsChoices).append(choiceButtons);
+        $(cardMain).append(potentialDetailsChoices);
+    
+        // append this card to the match div (i.e. main content on page
+        $(cardDiv).append(cardMain);
+    
+        $(".containerMatch").append(cardDiv);
       };
       ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
       $(".dislike-choice-button").on("click", function() {
-        $(cardDiv).remove();
+        console.log("Click dislike", $(this).parent(".whole-card"));
+        $(this).parents(".whole-card").remove();
       });
       ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
       $(".like-choice-button").on("click", function() {
-        console.log("hello");
+        var userFullName = $(this).parents(".whole-card").attr("data-name");
         db.collection("allUserInformation").get().then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
-            console.log(currentUser[0]);
-            console.log(doc.data().userObjectInformation.userProfileInformation[0]);
-            if (currentUser[0] === doc.data().userObjectInformation.userProfileInformation[0]) {
+            if (userFullName === doc.data().userObjectInformation.userProfileInformation[0]) {
               // create a div that is a card
               var cardDiv = $("<div>");
               $(cardDiv).addClass("card whole-card match-details");

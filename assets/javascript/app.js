@@ -21,12 +21,24 @@ $(".get-started-button").on("click", function(event) {
   var username = $("#input-username").val();              // user's username input
   var password = $("#input-password").val();             // user's password input
   var existingUsernameArray = [];        // Array of user's existing usernames
+  
 
      db.collection("existingUsernames").get().then(function(querySnapshot) {
        querySnapshot.forEach(function(doc) {
          existingUsernameArray.push(doc.data().username);            // Putting all existing usernames in an array
        });
-       if ((existingUsernameArray.includes(username) === false)) {    // if the current list of already existing usernames does NOT include the username that the user typed in...
+
+       if (username === "") {
+        $(".existing-username-text").remove();
+        $(".password-length-wrong").remove();
+        $(".blank-username-text").remove();
+        var blankUsernameContainer = $("<small>");
+        blankUsernameContainer.addClass("form-text text-muted blank-username-text");
+        blankUsernameContainer.text("Please type a valid username.");
+        $(".username-input-form").append(blankUsernameContainer);
+      }
+      
+      else if ((existingUsernameArray.includes(username) === false) && (password.length >= 8 && password.length <= 20)) {    // if the current list of already existing usernames does NOT include the username that the user typed in...
          
         userObjectInformation.username = username;             // pushes un-used usernames into the userObjectInformation object
         userObjectInformation.password = password;
@@ -42,15 +54,38 @@ $(".get-started-button").on("click", function(event) {
            });
           $('#modal2').modal('hide');
           $('#modal15').modal('show');
-       } else if ((existingUsernameArray.includes(username) === true)) {         // if there is already an existing username
+
+       } else if ((existingUsernameArray.includes(username) === true) && (password.length >= 8 && password.length <= 20)) {         // if there is already an existing username
+         $(".password-length-wrong").remove();
          $(".existing-username-text").remove();
+         $(".blank-username-text").remove();
          var wrongUsernameContainer = $("<small>");
          wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
          wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
          $(".username-input-form").append(wrongUsernameContainer);
-       };
+       } else if ((existingUsernameArray.includes(username) === false) && (password.length = 8 || password.length > 20)) {         // if there is already an existing username
+        $(".existing-username-text").remove();
+        $(".password-length-wrong").remove();
+        $(".blank-username-text").remove();
+        var invalidPasswordContainer = $("<small>");
+        invalidPasswordContainer.addClass("form-text text-muted password-length-wrong");
+        invalidPasswordContainer.text("Your password is an invalid length!");
+        $("#passwordHelpBlock").append(invalidPasswordContainer);
+      } else if ((existingUsernameArray.includes(username) === true) && (password.length < 8 || password.length > 20)) {         // if there is already an existing username
+        $(".existing-username-text").remove();
+        $(".password-length-wrong").remove();
+        $(".blank-username-text").remove();
+        var wrongUsernameContainer = $("<small>");
+        wrongUsernameContainer.addClass("form-text text-muted existing-username-text");
+        wrongUsernameContainer.text("This username is already taken. Please go bo back to the login screen or use a different username.");
+        $(".username-input-form").append(wrongUsernameContainer);
+        var invalidPasswordContainer = $("<small>");
+        invalidPasswordContainer.addClass("form-text text-muted password-length-wrong");
+        invalidPasswordContainer.text("Your password is an invalid length!");
+        $("#passwordHelpBlock").append(invalidPasswordContainer);
+      };
      });  
-
+      
     
   $(".profile-completion-button").on("click", function() {     // ON-CLICK FUNCTION FOR PROFILE BUTTON AFTER SIGN-UP MODAL CONDITION IS MET
     var userName = $("#name").val();
@@ -141,7 +176,8 @@ $(".sign-in-button").on("click", function(event) {
         currentUserFitnessGoals: doc.data().userObjectInformation.userFitnessGoals,
         currentUserSwolemateGender: doc.data().userObjectInformation.userSwolemateGender,
         currentUserWeekdayAvailability: doc.data().userObjectInformation.userWeekdayAvailability,
-        currentUserWeekendAvailability: doc.data().userObjectInformation.userWeekendAvailability
+        currentUserWeekendAvailability: doc.data().userObjectInformation.userWeekendAvailability,
+        currentUserFirstAndLastName: doc.data().userObjectInformation.userProfileInformation[0]
         });
       }; 
     });
@@ -220,9 +256,12 @@ var eachUsersProfileInformation = [];       // goes into the array above
 $(".current-matches-match-button").hide();
 $("#current-matches-container").hide();
 $("#get-matched").on("click", function() {
+
   $(".fa-soundcloud").remove();
   $(".current-matches-match-button").show();
   var currentUserPreferencesArray2 = [];
+  var userFullName = "";
+
   db.collection("currentUsersPreferences").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
         currentUserPreferencesArray2.push(doc.data().currentUserPreferenceLocation);
@@ -233,7 +272,11 @@ $("#get-matched").on("click", function() {
       });
     });
   
-  db.collection("allUserInformation").get().then(function(querySnapshot) {
+    db.collection("currentUsersPreferences").doc("UsZpSo6kUVDWQfh3FdUz").get().then(function(doc) {
+      userFullName = doc.data().currentUserFirstAndLastName;
+    });
+  
+    db.collection("allUserInformation").get().then(function(querySnapshot) {
     var cardCount = 0;
     var otherUsersProfileArray = [];
     querySnapshot.forEach(function(doc) {
@@ -246,13 +289,15 @@ $("#get-matched").on("click", function() {
       eachUsersPreferences.push(doc.data().userObjectInformation.userSwolemateGender);      // 2 index
       eachUsersPreferences.push(doc.data().userObjectInformation.userWeekdayAvailability);      // 3 index
       eachUsersPreferences.push(doc.data().userObjectInformation.userWeekendAvailability);      // 4 index
-      /*
+      
       console.log(eachUsersPreferences);
       console.log(currentUserPreferencesArray2);
-      */
-
+      
+        if (userFullName === doc.data().userObjectInformation.userProfileInformation[0]) {
+          cardCount;
+        } 
         // if all 4 categories match
-        if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
           cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
@@ -323,7 +368,16 @@ $("#get-matched").on("click", function() {
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         }
-        // if ONLY location matches
+        // if not all cards have been generated, if ONLY location and gender match
+        else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
+          cardCount++;
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[3])     // age
+          eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[2])     // location
+          eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
+          otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
+        }
+        // if not all cards have been generated, and if ONLY location matches
         else if ((currentUserPreferencesArray2[0] === eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] !== eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] !== eachUsersPreferences[4])) {
           cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
@@ -332,7 +386,7 @@ $("#get-matched").on("click", function() {
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         }
-        // if ONLY availability matches
+        // if not all cards have been generated, if ONLY availability matches
         else if ((currentUserPreferencesArray2[0] !== eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] !== eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] !== eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
           cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
@@ -341,7 +395,7 @@ $("#get-matched").on("click", function() {
           eachUsersProfileInformation.push("MatchPageExample1.jpg")     // image
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         }
-        // if only location DOESN'T MATCH
+        // if not all cards have been generated, if only location DOESN'T MATCH
         else if ((currentUserPreferencesArray2[0] !== eachUsersPreferences[0]) && (currentUserPreferencesArray2[1] === eachUsersPreferences[1]) && (currentUserPreferencesArray2[2] === eachUsersPreferences[2]) && (currentUserPreferencesArray2[3] === eachUsersPreferences[3]) && (currentUserPreferencesArray2[4] === eachUsersPreferences[4])) {
           cardCount++;
           eachUsersProfileInformation.push(doc.data().userObjectInformation.userProfileInformation[0])     // full name
@@ -351,6 +405,7 @@ $("#get-matched").on("click", function() {
           otherUsersProfileArray.push(eachUsersProfileInformation);    // [[0,1,2,3], [0,1,2,3], [0,1,2,3]]
         };
         console.log(otherUsersProfileArray);
+        console.log(cardCount);
     });
     if (cardCount > 0) {
     // buttons on page are cleared (so that matches can be displayed)
@@ -364,39 +419,40 @@ $("#get-matched").on("click", function() {
     
       // create a div that is a card
       var cardDiv = $("<div>");
-      $(cardDiv).addClass("card");
+      $(cardDiv).addClass("card whole-card");
       $(cardDiv).attr("id", "card-" + i);
       $(cardDiv).attr("data-clickable", true);
   
       // create a  div row to house potential's pic, name, & age;
       // append to card
-      var cardMain = $("<div>").addClass("row m-1");
+      var cardMain = $("<div>");
             
   
       // create an IMAGE for card - FIREBASE 
       // images are placeholders for rn
-      var potentialPicDiv = $("<div>").addClass("col-md-6");
+      var potentialPicDiv = $("<div>");
       // create an image within the div and 
       // set the source of the image to the correct file path
       var potentialPic = $("<img>");
       $(potentialPic).attr("src", "assets/images/MatchPageExample2.jpg");
       // give image a class so can be styled later in CSS - class: profile-card-pic
       // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
-      $(potentialPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
+      $(potentialPic).addClass("profile-card-pic no-gutters card-img img-fluid m-xs-auto");
       $(potentialPic).attr("alt", "Match #" + (i + 1) + " Photo");
       $(potentialPicDiv).append(potentialPic);
       $(cardMain).append(potentialPicDiv);
   
       // create the textual body of the card
-      var potentialDetailsChoices = $("<div>").addClass("col-md-6 col-xs text-center potential-details");
+      var potentialDetailsChoices = $("<div>").addClass("text-center potential-details");
       // create a card title to hold the name of the potential match
       // & append to card body div
-      var potentialDetailsContent = $("<div>").addClass("card-body mt-md-5");
+      var potentialDetailsContent = $("<div>").addClass("card-text");
       var potentialNameAge = $("<h5>").addClass("card-title");
       $(potentialNameAge).text(currentUser[0] + ", " + currentUser[1]);
       $(potentialDetailsContent).append(potentialNameAge);
       // create match location text on card
       var potentialLocation = $("<h6>").attr("id", "match-location");
+      // $(potentialLocation).addClass("card-body");
       $(potentialLocation).text(currentUser[2]);
       $(potentialDetailsContent).append(potentialLocation);
   
@@ -428,6 +484,12 @@ $("#get-matched").on("click", function() {
       $(cardDiv).append(cardMain);
   
       $(".containerMatch").append(cardDiv);
+
+      ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
+      $(".dislike-choice-button").on("click", function() {
+        $(cardDiv).remove();
+      });
+
       ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
       $(".like-choice-button").on("click", function() {
         db.collection("allUserInformation").get().then(function(querySnapshot) {
@@ -435,31 +497,31 @@ $("#get-matched").on("click", function() {
             if (currentUser[0] === doc.data().userObjectInformation.userProfileInformation[0]) {
               // create a div that is a card
               var cardDiv = $("<div>");
-              $(cardDiv).addClass("card");
+              $(cardDiv).addClass("card whole-card match-details");
 
               // create a  div row to house match's pic and single-word details
-              var cardMainOne = $("<div>").addClass("row m-1");
+              var cardMainOne = $("<div>").addClass("row");
         
               // create an IMAGE for card - FIREBASE 
               // images are placeholders for rn
-              var matchPicDiv = $("<div>").addClass("col-md-6");
+              var matchPicDiv = $("<div>").addClass("col");
               // create an image within the div and 
               // set the source of the image to the correct file path
               var matchPic = $("<img>");
               $(matchPic).attr("src", "assets/images/MatchPageExample3.jpg");
               // give image a class so can be styled later in CSS - class: profile-card-pic
               // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
-              $(matchPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
+              $(matchPic).addClass("profile-card-pic card-img card-img-top img-fluid m-auto no-gutters");
               $(matchPic).attr("alt", "Match #" + doc.data().userObjectInformation.username + " Photo");
               $(matchPicDiv).append(matchPic);
               $(cardMainOne).append(matchPicDiv);
 
               // create the textual body of the card
-              var matchDetails = $("<div>").addClass("col-md-6 col-xs text-center match-details");
+              var matchDetails = $("<div>").addClass("row text-center m-1");
               // create a card title to hold the name of the potential match
         
               // & append to card body div
-              var matchDetailsContent = $("<div>").addClass("card-body mt-md-5");
+              var matchDetailsContent = $("<div>").addClass("col card-body");
               var matchName = $("<h5>").addClass("card-title");
               $(matchName).text(doc.data().userObjectInformation.userProfileInformation[0]);
               $(matchDetailsContent).append(matchName);
@@ -468,76 +530,72 @@ $("#get-matched").on("click", function() {
               // experience level, fitness goals, availability, why swolemates
               // age
               var matchAge = $("<div>").addClass("match-age");
-              $(matchAge).html("<p><span class='age-header'>Age: </span>" + doc.data().userObjectInformation.userProfileInformation[3] + "</p>");
+              $(matchAge).html("<p><span class='age-header special-card-word'>Age: </span>" + doc.data().userObjectInformation.userProfileInformation[3] + "</p>");
               $(matchDetailsContent).append(matchAge);
 
               // gender
               var matchGender = $("<div>").addClass("match-gender");
-              $(matchGender).html("<p><span class='gender-header'>Gender: </span>" + doc.data().userObjectInformation.userProfileInformation[1] + "</p>");
+              $(matchGender).html("<p><span class='gender-header special-card-word'>Gender: </span>" + doc.data().userObjectInformation.userProfileInformation[1] + "</p>");
               $(matchDetailsContent).append(matchGender);
 
               // location
               var matchLocation = $("<div>").addClass("match-location");
-              $(matchLocation).html("<p><span class='location-header'>Location: </span>" + doc.data().userObjectInformation.userProfileInformation[2] + "</p>");
+              $(matchLocation).html("<p><span class='location-header special-card-word'>Location: </span>" + doc.data().userObjectInformation.userProfileInformation[2] + "</p>");
               $(matchDetailsContent).append(matchLocation);
 
               // weight
               var matchWeight = $("<div>").addClass("match-weight");
-              $(matchWeight).html("<p><span class='weight-header'>Weight: </span>" + doc.data().userObjectInformation.userProfileInformation[4] + "</p>");
+              $(matchWeight).html("<p><span class='weight-header special-card-word'>Weight: </span>" + doc.data().userObjectInformation.userProfileInformation[4] + "</p>");
               $(matchDetailsContent).append(matchWeight);
 
               // activity level
               var matchActivity = $("<div>").addClass("match-activity");
-              $(matchActivity).html("<p><span class='activity-header'>Activity Level: </span>" + doc.data().userObjectInformation.userProfileInformation[5] + "</p>");
+              $(matchActivity).html("<p><span class='activity-header special-card-word'>Activity Level: </span>" + doc.data().userObjectInformation.userProfileInformation[5] + "</p>");
               $(matchDetailsContent).append(matchActivity);
 
               // experience level
               var matchExperience = $("<div>").addClass("match-experience");
-              $(matchExperience).html("<p><span class='experience-header'>Experience: </span>" + doc.data().userObjectInformation.userProfileInformation[6] + "</p>");
+              $(matchExperience).html("<p><span class='experience-header special-card-word'>Experience: </span>" + doc.data().userObjectInformation.userProfileInformation[6] + "</p>");
               $(matchDetailsContent).append(matchExperience);
-
-              // a new row for the longer content that follow the above more list-like details
-              var cardMainTwo = $("<div>").addClass("row m-1");
-              var matchDetailsContent2 = $("<div>").addClass("col");
 
               // fitness goals - a list
               var matchGoals = $("<div>").addClass("match-goals");
-              $(matchGoals).append("<p><span class='goal-header'>Goals:</span></p>");
-              var goalsList = $("<ul>")
-              var goal = $("<li>");
-              goal.text(doc.data().userObjectInformation.userFitnessGoals);
-              goalsList.append(goal);
-              $(matchGoals).append(goalsList);
-              $(matchDetailsContent2).append(matchGoals);
+              $(matchGoals).append("<p><span class='goal-header special-card-word'>Goals: </span>" + doc.data().userObjectInformation.userFitnessGoals + "</p>");
+              // var goalsList = $("<p>")
+              // var goal = $("<p>");
+              // goal.text();
+              // goalsList.append(goal);
+              // $(matchGoals).append(goal);
+              $(matchDetailsContent).append(matchGoals);
 
               // availability
               var matchAvailability = $("<div>").addClass("match-availability");
-              // if(currentMatch.userAvailability === "Weekday mornings & Weekend mornings")
-              var availabilityText = "<p>You might be able to hit the gym together on weekday " + doc.data().userObjectInformation.userWeekdayAvailability + " and weekend " + doc.data().userObjectInformation.userWeekendAvailability + "</p>";
+              var formattedWeekdayAvailability = (doc.data().userObjectInformation.userWeekdayAvailability[0]).toLowerCase() + (doc.data().userObjectInformation.userWeekdayAvailability).slice(1);
+              var formattedWeekendAvailability = (doc.data().userObjectInformation.userWeekendAvailability[0]).toLowerCase() + (doc.data().userObjectInformation.userWeekendAvailability).slice(1);
+              var availabilityText = "<p>You might be able to hit the gym together on weekday " + formattedWeekdayAvailability + " and weekend " + formattedWeekendAvailability + ".</p>";
               $(matchAvailability).html(availabilityText);
-              $(matchDetailsContent2).append(matchAvailability);
-              // this will depend on how the data is stored from the availability table
-              // conditional statments could determine what the sentence says
+              $(matchDetailsContent).append(matchAvailability);
         
 
               // why swolemates
               var matchBlurb = $("<div>").addClass("match-blurb");
-              $(matchBlurb).append("<p><span class='blurb-header'>Reason for Swolemates:</span></p>");
+              $(matchBlurb).append("<p><span class='blurb-header special-card-word'>Reason for Swolemates:</span></p>");
               $(matchBlurb).append("<p>" + doc.data().userObjectInformation.userProfileInformation[7]);
-              $(matchDetailsContent2).append(matchBlurb);
+              $(matchDetailsContent).append(matchBlurb);
 
               // heart emoji icon to indicate that this is a mutual like
               var heartIcon = $("<div>").addClass("d-flex flex-row-reverse bd-highlight profile-heart");
               $(heartIcon).html("<i class='em em-heart'</i>");
-        
+              
+              $(matchDetails).append(matchDetailsContent);
+              $(cardMainOne).append(matchDetails);
+
+
               // append these all to one another and to the card
-              $(cardMainOne).append(matchDetailsContent);
-              $(cardMainTwo).append(matchDetailsContent2);
+              // $(cardMainTwo).append(matchDetailsContent2);
 
               // append this card to the match div (i.e. main content on page
               $(cardDiv).append(cardMainOne);
-              $(cardDiv).append(cardMainTwo);
-              $(cardDiv).append(heartIcon);
               $("#current-matches-container").append(cardDiv);
               };
             });
@@ -580,7 +638,9 @@ $(".current-matches-match-button").on("click", function() {
 ////////////////////////////////////   EVENT LISTENERS FOR NAVBAR   //////////////////////////////////
 
 // clicking "Match Me! in the navbar"
-// $("#nav-get-matched-2").on("click", createCardByMatching);
+$("#nav-get-matched-2").on("click", function() {
+  window.location.href = "MatchMe.html";
+});
 
 // clicking "Current Matches in the navbar"
 // $("nav-show-matches").on("click", FUNCTION FOR SHOWING CURRENT MATCHES);

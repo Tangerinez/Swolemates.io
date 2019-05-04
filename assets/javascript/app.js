@@ -584,7 +584,17 @@ $("#show-matches").on("click", function() {
   });
 
         
+////////////////////////////////////   EVENT LISTENERS FOR NAVBAR   //////////////////////////////////
 
+// clicking "Match Me! in the navbar"
+// $("#nav-get-matched-2").on("click", createCardByMatching);
+
+// clicking "Current Matches in the navbar"
+// $("nav-show-matches").on("click", FUNCTION FOR SHOWING CURRENT MATCHES);
+
+$("#nav-logout-2").on("click", function() {
+  window.location.href = "openingScreen.html";
+});
 
 
 

@@ -179,40 +179,22 @@ function initiate2() {
 };
 google.maps.event.addDomListener(window, 'load', initiate2);
 
+// function initiate3() {
+//   var inputUser = document.getElementById('findGym');
+//   var autocomplete = new google.maps.places.Autocomplete(inputUser);
+// };
+// google.maps.event.addDomListener(window, 'load', initiate3);
+
 
 //////////////////// SOUND CLOUD API WIDGET On Click//////////////////////////////
 
 $(".fa-soundcloud").on("click", function (){
-  $("#sc-widget").hide();
+  $("#sc-widget").remove();
   $(".widget-empty-div").append("<iframe id='sc-widget' width='100%' height='166' scrolling='no' frameborder='no' src='https://w.soundcloud.com/player/?url=https://soundcloud.com/user-160781157/sets/workout&show_artwork=true'></iframe>")
 })
 
-// var iframeElement   = document.querySelector('iframe');
-// var iframeElementID = iframeElement.id;
-// var widget1         = SC.Widget(iframeElement);
-// var widget2         = SC.Widget(iframeElementID);
 
-// SC.initialize({
-//   client_id: 'YOUR_CLIENT_ID'
-//   });
-
-// (function(){
-//   var widgetIframe = document.getElementById('sc-widget'),
-//       widget       = SC.Widget(widgetIframe),
-//       newSoundUrl = 'http://api.soundcloud.com/tracks/160781157';
-
-//     widget.bind(SC.Widget.Events.READY, function() {
-//     // load new widget
-//     widget.bind(SC.Widget.Events.FINISH, function() {
-//       widget.load(newSoundUrl, {
-//         show_artwork: false
-//       });
-//     });
-//   });
-
-// }());
-
-/////////////// Function for shuffling elements in an array //////////////
+//////// Function for shuffling elements in an array //////////////
 /*
 
 function shuffle(array) {
@@ -238,6 +220,7 @@ var eachUsersProfileInformation = [];       // goes into the array above
 $(".current-matches-match-button").hide();
 $("#current-matches-container").hide();
 $("#get-matched").on("click", function() {
+  $(".fa-soundcloud").remove();
   $(".current-matches-match-button").show();
   var currentUserPreferencesArray2 = [];
   db.collection("currentUsersPreferences").get().then(function(querySnapshot) {
@@ -563,6 +546,7 @@ $("#get-matched").on("click", function() {
       };
         
       $(".current-matches-match-button").on("click", function() {
+        $(".fa-soundcloud").remove();
         $(".current-matches-match-button").hide();
         $(".containerMatch").hide();
         $("#current-matches-container").show();
@@ -571,6 +555,7 @@ $("#get-matched").on("click", function() {
     } else if (cardCount === 0) {
       $(".containerMatch").empty();
       $(".containerMatch").append("<h1 id='no-match-message'>You have no current matches!</h1>");
+      $(".fa-soundcloud").remove();
       console.log(otherUsersProfileArray);
     };
   });
@@ -578,6 +563,7 @@ $("#get-matched").on("click", function() {
 
 ////////////////////////////////
   $("#show-matches").on("click", function() {
+  $(".fa-soundcloud").remove();
   $("#current-matches-container").show();
   $(".containerMatch").hide();
 });

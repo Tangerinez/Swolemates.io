@@ -235,7 +235,10 @@ var eachUsersProfileInformation = [];       // goes into the array above
 */
  
 // currentUserPreferencesArray
+$(".current-matches-match-button").hide();
+$("#current-matches-container").hide();
 $("#get-matched").on("click", function() {
+  $(".current-matches-match-button").show();
   var currentUserPreferencesArray2 = [];
   db.collection("currentUsersPreferences").get().then(function(querySnapshot) {
     querySnapshot.forEach(function(doc) {
@@ -367,7 +370,7 @@ $("#get-matched").on("click", function() {
         console.log(otherUsersProfileArray);
     });
     if (cardCount > 0) {
-      // buttons on page are cleared (so that matches can be displayed)
+    // buttons on page are cleared (so that matches can be displayed)
       $(".containerMatch").empty();
   
       // a loop to go through the (array of) current matches
@@ -441,10 +444,129 @@ $("#get-matched").on("click", function() {
       // append this card to the match div (i.e. main content on page
       $(cardDiv).append(cardMain);
   
-  
-  
       $(".containerMatch").append(cardDiv);
+      ///// IF THE CARDS ARE CREATED -> This on-click function for the like button works /////
+      $(".like-choice-button").on("click", function() {
+        db.collection("allUserInformation").get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            if (currentUser[0] === doc.data().userObjectInformation.userProfileInformation[0]) {
+              // create a div that is a card
+              var cardDiv = $("<div>");
+              $(cardDiv).addClass("card");
+
+              // create a  div row to house match's pic and single-word details
+              var cardMainOne = $("<div>").addClass("row m-1");
+        
+              // create an IMAGE for card - FIREBASE 
+              // images are placeholders for rn
+              var matchPicDiv = $("<div>").addClass("col-md-6");
+              // create an image within the div and 
+              // set the source of the image to the correct file path
+              var matchPic = $("<img>");
+              $(matchPic).attr("src", "assets/images/MatchPageExample3.jpg");
+              // give image a class so can be styled later in CSS - class: profile-card-pic
+              // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
+              $(matchPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
+              $(matchPic).attr("alt", "Match #" + doc.data().userObjectInformation.username + " Photo");
+              $(matchPicDiv).append(matchPic);
+              $(cardMainOne).append(matchPicDiv);
+
+              // create the textual body of the card
+              var matchDetails = $("<div>").addClass("col-md-6 col-xs text-center match-details");
+              // create a card title to hold the name of the potential match
+        
+              // & append to card body div
+              var matchDetailsContent = $("<div>").addClass("card-body mt-md-5");
+              var matchName = $("<h5>").addClass("card-title");
+              $(matchName).text(doc.data().userObjectInformation.userProfileInformation[0]);
+              $(matchDetailsContent).append(matchName);
+
+              // create the text fields for age, gender, location, weight, activity level, 
+              // experience level, fitness goals, availability, why swolemates
+              // age
+              var matchAge = $("<div>").addClass("match-age");
+              $(matchAge).html("<p><span class='age-header'>Age: </span>" + doc.data().userObjectInformation.userProfileInformation[3] + "</p>");
+              $(matchDetailsContent).append(matchAge);
+
+              // gender
+              var matchGender = $("<div>").addClass("match-gender");
+              $(matchGender).html("<p><span class='gender-header'>Gender: </span>" + doc.data().userObjectInformation.userProfileInformation[1] + "</p>");
+              $(matchDetailsContent).append(matchGender);
+
+              // location
+              var matchLocation = $("<div>").addClass("match-location");
+              $(matchLocation).html("<p><span class='location-header'>Location: </span>" + doc.data().userObjectInformation.userProfileInformation[2] + "</p>");
+              $(matchDetailsContent).append(matchLocation);
+
+              // weight
+              var matchWeight = $("<div>").addClass("match-weight");
+              $(matchWeight).html("<p><span class='weight-header'>Weight: </span>" + doc.data().userObjectInformation.userProfileInformation[4] + "</p>");
+              $(matchDetailsContent).append(matchWeight);
+
+              // activity level
+              var matchActivity = $("<div>").addClass("match-activity");
+              $(matchActivity).html("<p><span class='activity-header'>Activity Level: </span>" + doc.data().userObjectInformation.userProfileInformation[5] + "</p>");
+              $(matchDetailsContent).append(matchActivity);
+
+              // experience level
+              var matchExperience = $("<div>").addClass("match-experience");
+              $(matchExperience).html("<p><span class='experience-header'>Experience: </span>" + doc.data().userObjectInformation.userProfileInformation[6] + "</p>");
+              $(matchDetailsContent).append(matchExperience);
+
+              // a new row for the longer content that follow the above more list-like details
+              var cardMainTwo = $("<div>").addClass("row m-1");
+              var matchDetailsContent2 = $("<div>").addClass("col");
+
+              // fitness goals - a list
+              var matchGoals = $("<div>").addClass("match-goals");
+              $(matchGoals).append("<p><span class='goal-header'>Goals:</span></p>");
+              var goalsList = $("<ul>")
+              var goal = $("<li>");
+              goal.text(doc.data().userObjectInformation.userFitnessGoals);
+              goalsList.append(goal);
+              $(matchGoals).append(goalsList);
+              $(matchDetailsContent2).append(matchGoals);
+
+              // availability
+              var matchAvailability = $("<div>").addClass("match-availability");
+              // if(currentMatch.userAvailability === "Weekday mornings & Weekend mornings")
+              var availabilityText = "<p>You might be able to hit the gym together on weekday " + doc.data().userObjectInformation.userWeekdayAvailability + " and weekend " + doc.data().userObjectInformation.userWeekendAvailability + "</p>";
+              $(matchAvailability).html(availabilityText);
+              $(matchDetailsContent2).append(matchAvailability);
+              // this will depend on how the data is stored from the availability table
+              // conditional statments could determine what the sentence says
+        
+
+              // why swolemates
+              var matchBlurb = $("<div>").addClass("match-blurb");
+              $(matchBlurb).append("<p><span class='blurb-header'>Reason for Swolemates:</span></p>");
+              $(matchBlurb).append("<p>" + doc.data().userObjectInformation.userProfileInformation[7]);
+              $(matchDetailsContent2).append(matchBlurb);
+
+              // heart emoji icon to indicate that this is a mutual like
+              var heartIcon = $("<div>").addClass("d-flex flex-row-reverse bd-highlight profile-heart");
+              $(heartIcon).html("<i class='em em-heart'</i>");
+        
+              // append these all to one another and to the card
+              $(cardMainOne).append(matchDetailsContent);
+              $(cardMainTwo).append(matchDetailsContent2);
+
+              // append this card to the match div (i.e. main content on page
+              $(cardDiv).append(cardMainOne);
+              $(cardDiv).append(cardMainTwo);
+              $(cardDiv).append(heartIcon);
+              $("#current-matches-container").append(cardDiv);
+              };
+            });
+          });
+        });
       };
+        
+      $(".current-matches-match-button").on("click", function() {
+        $(".current-matches-match-button").hide();
+        $(".containerMatch").hide();
+        $("#current-matches-container").show();
+      });
     
     } else if (cardCount === 0) {
       $(".containerMatch").empty();
@@ -455,133 +577,18 @@ $("#get-matched").on("click", function() {
 });
 
 ////////////////////////////////
-$("#show-matches").on("click", function() {
-  window.location.href = "CurrentMatchPage.html"; 
+  $("#show-matches").on("click", function() {
+  $("#current-matches-container").show();
+  $(".containerMatch").hide();
 });
-//////////////////////////////// 
-  $(".like-choice-button").on("click", function() {
-    console.log("hello");
-    var thisCardsName = this.$(".card-title");
-    
-    db.collection("allUserInformation").get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-        if (thisCardsName === doc.data().userObjectInformation.username) {
-          // create a div that is a card
-        var cardDiv = $("<div>");
-        $(cardDiv).addClass("card");
+/*
+$(".current-matches-match-button").on("click", function() {
+  $(".current-matches-match-button").hide();
+  $(".containerMatch").hide();
+  $("#current-matches-container").show();
+});
+*/
 
-        // create a  div row to house match's pic and single-word details
-        var cardMainOne = $("<div>").addClass("row m-1");
-        
-
-        // create an IMAGE for card - FIREBASE 
-            // images are placeholders for rn
-        var matchPicDiv = $("<div>").addClass("col-md-6");
-            // create an image within the div and 
-            // set the source of the image to the correct file path
-        var matchPic = $("<img>");
-        $(matchPic).attr("src", "assets/images/MatchPageExample3.jpg");
-            // give image a class so can be styled later in CSS - class: profile-card-pic
-            // also add other essential attributes - (e.g. alt text: "Match #1 Photo" and so on)
-        $(matchPic).addClass("profile-card-pic card-img img-fluid m-xs-auto");
-        $(matchPic).attr("alt", "Match #" + (i + 1) + " Photo");
-        $(matchPicDiv).append(matchPic);
-        $(cardMainOne).append(matchPicDiv);
-
-        // create the textual body of the card
-        var matchDetails = $("<div>").addClass("col-md-6 col-xs text-center match-details");
-        // create a card title to hold the name of the potential match
-        
-        // & append to card body div
-        var matchDetailsContent = $("<div>").addClass("card-body mt-md-5");
-        var matchName = $("<h5>").addClass("card-title");
-        $(matchName).text(doc.data().userObjectInformation.userProfileInformation[0]);
-        $(matchDetailsContent).append(matchName);
-
-        // create the text fields for age, gender, location, weight, activity level, 
-            // experience level, fitness goals, availability, why swolemates
-                // age
-        var matchAge = $("<div>").addClass("match-age");
-        $(matchAge).html("<p><span class='age-header'>Age: </span>" + doc.data().userObjectInformation.userProfileInformation[3] + "</p>");
-        $(matchDetailsContent).append(matchAge);
-
-                // gender
-        var matchGender = $("<div>").addClass("match-gender");
-        $(matchGender).html("<p><span class='gender-header'>Gender: </span>" + doc.data().userObjectInformation.userProfileInformation[1] + "</p>");
-        $(matchDetailsContent).append(matchGender);
-
-                // location
-        var matchLocation = $("<div>").addClass("match-location");
-        $(matchLocation).html("<p><span class='location-header'>Location: </span>" + doc.data().userObjectInformation.userProfileInformation[2] + "</p>");
-        $(matchDetailsContent).append(matchLocation);
-
-                // weight
-        var matchWeight = $("<div>").addClass("match-weight");
-        $(matchWeight).html("<p><span class='weight-header'>Weight: </span>" + doc.data().userObjectInformation.userProfileInformation[4] + "</p>");
-        $(matchDetailsContent).append(matchWeight);
-
-                // activity level
-        var matchActivity = $("<div>").addClass("match-activity");
-        $(matchActivity).html("<p><span class='activity-header'>Activity Level: </span>" + doc.data().userObjectInformation.userProfileInformation[5] + "</p>");
-        $(matchDetailsContent).append(matchActivity);
-
-                // experience level
-        var matchExperience = $("<div>").addClass("match-experience");
-        $(matchExperience).html("<p><span class='experience-header'>Experience: </span>" + doc.data().userObjectInformation.userProfileInformation[6] + "</p>");
-        $(matchDetailsContent).append(matchExperience);
-
-        // a new row for the longer content that follow the above more list-like details
-        var cardMainTwo = $("<div>").addClass("row m-1");
-        var matchDetailsContent2 = $("<div>").addClass("col");
-
-
-                // fitness goals - a list
-        var matchGoals = $("<div>").addClass("match-goals");
-        $(matchGoals).append("<p><span class='goal-header'>Goals:</span></p>");
-        var goalsList = $("<ul>")
-        var goal = $("<li>");
-          goal.text(doc.data().userObjectInformation.userFitnessGoals);
-          goalsList.append(goal);
-        $(matchGoals).append(goalsList);
-        $(matchDetailsContent2).append(matchGoals);
-
-                // availability
-        var matchAvailability = $("<div>").addClass("match-availability");
-        // if(currentMatch.userAvailability === "Weekday mornings & Weekend mornings")
-        var availabilityText = "<p>You might be able to hit the gym together on weekday " + doc.data().userObjectInformation.userWeekdayAvailability + " and weekend " + doc.data().userObjectInformation.userWeekendAvailability + "</p>";
-        $(matchAvailability).html(availabilityText);
-        $(matchDetailsContent2).append(matchAvailability);
-        // this will depend on how the data is stored from the availability table
-        //     conditional statments could determine what the sentence says
-        
-
-                // why swolemates
-        var matchBlurb = $("<div>").addClass("match-blurb");
-        $(matchBlurb).append("<p><span class='blurb-header'>Reason for Swolemates:</span></p>");
-        $(matchBlurb).append("<p>" + doc.data().userObjectInformation.userProfileInformation[7]);
-        $(matchDetailsContent2).append(matchBlurb);
-
-        // heart emoji icon to indicate that this is a mutual like
-        var heartIcon = $("<div>").addClass("d-flex flex-row-reverse bd-highlight profile-heart");
-        $(heartIcon).html("<i class='em em-heart'</i>");
-        
-
-
-        // append these all to one another and to the card
-        $(cardMainOne).append(matchDetailsContent);
-        $(cardMainTwo).append(matchDetailsContent2);
-
-        // append this card to the match div (i.e. main content on page
-        $(cardDiv).append(cardMainOne);
-        $(cardDiv).append(cardMainTwo);
-        $(cardDiv).append(heartIcon);
-
-
-        $("#current-matches-container").append(cardDiv);
-        };  
-      });
-    });
-  });
 
         
 

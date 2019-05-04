@@ -21,6 +21,9 @@
     background-size: cover;
 }
 
+.current-matches-match-button {
+    margin-bottom: 10%; 
+}
 
 #login {
     text-align: center;

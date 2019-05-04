@@ -425,7 +425,7 @@ $("#get-matched").on("click", function() {
   
       // create a  div row to house potential's pic, name, & age;
       // append to card
-      var cardMain = $("<div>");
+      var cardMain = $("<div>").addClass("container");
             
   
       // create an IMAGE for card - FIREBASE 

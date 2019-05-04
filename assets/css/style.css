@@ -4,9 +4,7 @@
 }
 
 .containerStart {
-    padding-top: 10%;
-    padding-left: 30%;
-    padding-right: 30%;
+    padding: 300px;
 }
 
 #matchMe-body {
@@ -210,11 +208,18 @@ margin: 0;
     margin-top: 2em;
 }
 
+.current-matches-match-button {
+    background-color: #ff6f61;
+    font-weight: bold;
+    border: none;
+    margin-top: 2em;
+}
+
 
 
 
 #sign-up-button:hover, #login-button:hover, #get-matched:hover, 
-#show-matches:hover, #show-matches-2:hover, #get-matched-2:hover {
+#show-matches:hover, #show-matches-2:hover, #get-matched-2:hover,  .current-matches-match-button:hover{
   box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
@@ -264,3 +269,8 @@ margin: 0;
     margin: auto;
     position: relative;
 }
+
+#current-matches-container {
+    padding: 300px;
+}
+
